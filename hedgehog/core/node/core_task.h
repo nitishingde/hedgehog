@@ -8,7 +8,6 @@
 #include <variant>
 #include <string_view>
 
-
 #include "../../tools/traits.h"
 #include "../io/queue/receiver/core_queue_multi_receivers.h"
 #include "../io/queue/sender/core_queue_sender.h"
@@ -26,8 +25,7 @@ template<class TaskOutput, class ...TaskInputs>
 class CoreTask
     : public virtual CoreQueueSender<TaskOutput>,
       public CoreQueueMultiReceivers<TaskInputs...>,
-      public virtual CoreExecute<TaskInputs> ...
-      {
+      public virtual CoreExecute<TaskInputs> ... {
  private:
   AbstractTask<TaskOutput, TaskInputs...> *task_ = nullptr;
   bool automaticStart_ = false;
@@ -120,7 +118,13 @@ class CoreTask
       this->incrementWaitDuration(std::chrono::duration_cast<std::chrono::microseconds>(finish - start));
       if (canTerminate) { break; }
       start = std::chrono::high_resolution_clock::now();
-      (this->operateReceivers<TaskInputs>(), ...);
+
+      this->lockUniqueMutex();
+      while (!this->receiversEmpty() && !this->callCanTerminate(false)) {
+        (this->operateReceivers<TaskInputs>(), ...);
+      }
+      this->unlockUniqueMutex();
+
       finish = std::chrono::high_resolution_clock::now();
       this->incrementExecutionDuration(std::chrono::duration_cast<std::chrono::microseconds>(finish - start));
     }
@@ -147,20 +151,16 @@ class CoreTask
   template<class Input>
   void operateReceivers() {
     HLOG_SELF(2, "Operate receivers")
-    this->lockUniqueMutex();
     if (!this->receiversEmpty()) {
-      std::variant<std::shared_ptr<TaskInputs>...>& variant = this->queue()->front();
-      if (std::get_if<std::shared_ptr<Input>>(&variant)) {
-        std::shared_ptr<Input> val = std::get<std::shared_ptr<Input>, std::shared_ptr<TaskInputs>...>(variant);
+      std::variant<std::shared_ptr<TaskInputs>...> &variant = this->queue()->front();
+      if (auto data = std::get_if<std::shared_ptr<Input>>(&variant)) {
+        std::shared_ptr<Input> val = *data;
         this->queue()->pop();
-        static_cast<CoreQueueReceiver<Input, TaskInputs...>*>(this)->decrementQueueSize();
+        static_cast<CoreQueueReceiver<Input, TaskInputs...> *>(this)->decrementQueueSize();
         this->unlockUniqueMutex();
         ((CoreExecute<Input> *) (this))->callExecute(val);
-      }else{
-        this->unlockUniqueMutex();
+        this->lockUniqueMutex();
       }
-    } else {
-      this->unlockUniqueMutex();
     }
   }
 
@@ -180,7 +180,7 @@ class CoreTask
                                             return !receiversEmpty || callCanTerminate;
                                           });
     HLOG_SELF(2, "Notification received")
-	assert(lock.owns_lock());
+    assert(lock.owns_lock());
 
     this->nvtxProfiler()->endRangeWaiting();
     return callCanTerminate(false);
