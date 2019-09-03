@@ -23,7 +23,8 @@ class CoreExecutionPipeline : public CoreTask<GraphOutput, GraphInputs...> {
   size_t
       numberGraphs_ = 0;
 
-  std::vector<int> deviceIds_ = {};
+  std::vector<int>
+    deviceIds_ = {};
 
  protected:
   std::shared_ptr<CoreSwitch<GraphInputs...>>
@@ -101,7 +102,8 @@ class CoreExecutionPipeline : public CoreTask<GraphOutput, GraphInputs...> {
 
   void addReceiver(CoreReceiver<GraphOutput> *receiver) override {
     for (CoreReceiver<GraphOutput> *r : receiver->receivers()) {
-      this->destinations()->insert(dynamic_cast<CoreQueueReceiver<GraphOutput> *>(r));
+      //todo
+      this->destinations()->insert(r);//dynamic_cast<CoreQueueReceiver<GraphOutput> *>(r));
     }
     for (auto epGraph : this->epGraphs_) {
       connectGraphsOutputToReceiver(epGraph.get(), receiver);
@@ -199,17 +201,18 @@ class CoreExecutionPipeline : public CoreTask<GraphOutput, GraphInputs...> {
 
   template<class GraphInput>
   void printEdgeSwitchGraphs(AbstractPrinter *printer, CoreGraph<GraphOutput, GraphInputs...> *graph) {
-	CoreQueueReceiver<GraphInput>* coreQueueReceiver = nullptr;
+	CoreReceiver<GraphInput>* coreReceiver = nullptr;
     for (CoreNode *graphInputNode : *(graph->inputsCoreNodes())) {
-      coreQueueReceiver = dynamic_cast<CoreQueueReceiver<GraphInput>*>(graphInputNode);
-      if(coreQueueReceiver) {
-		printer->printEdgeSwitchGraphs(coreQueueReceiver,
+      if((coreReceiver = dynamic_cast<CoreReceiver<GraphInput>*>(graphInputNode))){
+		printer->printEdgeSwitchGraphs(coreReceiver,
 									   this->id(),
 									   HedgehogTraits::type_name<GraphInput>(),
-									   coreQueueReceiver->queueSize(),
-									   coreQueueReceiver->maxQueueSize(),
+                                       coreReceiver->queueSize(),
+                                       coreReceiver->maxQueueSize(),
 									   HedgehogTraits::is_managed_memory_v<GraphInput>);
-	  }
+	  }else{
+        std::cerr << "Problem cast print edge switch graph" << std::endl;
+      }
     }
   }
 

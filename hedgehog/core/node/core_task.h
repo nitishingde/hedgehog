@@ -26,7 +26,8 @@ template<class TaskOutput, class ...TaskInputs>
 class CoreTask
     : public virtual CoreQueueSender<TaskOutput>,
       public CoreQueueMultiReceivers<TaskInputs...>,
-      public virtual CoreExecute<TaskInputs> ... {
+      public virtual CoreExecute<TaskInputs> ...
+      {
  private:
   AbstractTask<TaskOutput, TaskInputs...> *task_ = nullptr;
   bool automaticStart_ = false;
@@ -147,11 +148,17 @@ class CoreTask
   void operateReceivers() {
     HLOG_SELF(2, "Operate receivers")
     this->lockUniqueMutex();
-    auto receiver = static_cast<CoreQueueReceiver<Input> *>(this);
-    if (!receiver->receiverEmpty()) {
-      std::shared_ptr<Input> data = receiver->popFront();
-      this->unlockUniqueMutex();
-      static_cast<CoreExecute<Input> *>(this)->callExecute(data);
+    if (!this->receiversEmpty()) {
+      std::variant<std::shared_ptr<TaskInputs>...>& variant = this->queue()->front();
+      if (std::get_if<std::shared_ptr<Input>>(&variant)) {
+        std::shared_ptr<Input> val = std::get<std::shared_ptr<Input>, std::shared_ptr<TaskInputs>...>(variant);
+        this->queue()->pop();
+        static_cast<CoreQueueReceiver<Input, TaskInputs...>*>(this)->decrementQueueSize();
+        this->unlockUniqueMutex();
+        ((CoreExecute<Input> *) (this))->callExecute(val);
+      }else{
+        this->unlockUniqueMutex();
+      }
     } else {
       this->unlockUniqueMutex();
     }

@@ -13,7 +13,7 @@ class InnerEP : public AbstractExecutionPipeline<int, double, A> {
   InnerEP(std::shared_ptr<Graph<int, double, A>> const &graph,
           size_t const &numberGraphDuplications,
           std::vector<int> const &deviceIds,
-          bool automaticStart = false) : AbstractExecutionPipeline(graph,
+          bool automaticStart = false) : AbstractExecutionPipeline<int, double, A>(graph,
                                                                    numberGraphDuplications,
                                                                    deviceIds,
                                                                    automaticStart) {}

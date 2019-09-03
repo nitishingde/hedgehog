@@ -29,15 +29,17 @@ void testEPComposition() {
       graph = nullptr,
       tempGraph = innerGraph();
 
+  int iMax = 100;
+
   size_t count = 0;
   for (int i = 0; i < 3; ++i) { tempGraph = wrapperGraph(tempGraph); }
   graph = wrapperGraph(tempGraph);
   graph->executeGraph();
 
-  for (int i = 0; i < 100; ++i) { graph->pushData(std::make_shared<int>(i)); }
+  for (int i = 0; i < iMax; ++i) { graph->pushData(std::make_shared<int>(i)); }
   graph->finishPushingData();
   while (graph->getBlockingResult()) { count++; }
-  ASSERT_EQ(count, 25600);
+  ASSERT_EQ(count, 256 * iMax);
   graph->waitForTermination();
 }
 

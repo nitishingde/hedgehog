@@ -374,7 +374,12 @@ class CoreGraph : public CoreSender<GraphOutput>, public CoreGraphMultiReceivers
 	std::shared_ptr<GraphOutput> result = nullptr;
 	this->sink_->waitForNotification();
 	this->sink_->lockUniqueMutex();
-	if (!this->sink_->receiverEmpty()) { result = this->sink_->popFront(); }
+	if (!this->sink_->receiversEmpty()) {
+//	  std::variant<std::shared_ptr<GraphOutput>> variantResult = this->sink_->queue().front();
+	  result = std::get<std::shared_ptr<GraphOutput>>(this->sink_->queue()->front());
+	  this->sink_->queue()->pop();
+	  this->sink_->decrementQueueSize();
+	}
 	this->sink_->unlockUniqueMutex();
 	return result;
   }

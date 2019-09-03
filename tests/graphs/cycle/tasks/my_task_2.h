@@ -26,6 +26,12 @@ class MyTask2 : public AbstractTask<int, float> {
   }
 
   bool canTerminate() override { return count_ == 3 * 100; }
+
+  std::string extraPrintingInformation() const override {
+    std::ostringstream oss;
+    oss << "Count = " << this->count_;
+    return oss.str();
+  }
 };
 
 #endif //HEDGEHOG_MY_TASK_2_H

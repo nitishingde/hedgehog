@@ -12,42 +12,46 @@
 
 template<class NodeOutput>
 class CoreQueueSender : public CoreSender<NodeOutput>, public virtual CoreQueueNotifier {
-  std::shared_ptr<std::set<CoreQueueReceiver<NodeOutput> *>> destinations_ = nullptr;
+  std::shared_ptr<std::set<CoreReceiver<NodeOutput> *>> destinations_ = nullptr;
 
  public:
   CoreQueueSender(std::string_view const &name, NodeType const type, size_t const numberThreads)
 	  : CoreQueueNotifier(name, type, numberThreads),
 		CoreSender<NodeOutput>(name, type, numberThreads) {
 	HLOG_SELF(0, "Creating CoreQueueSender with type: " << (int) type << " and name: " << name)
-	destinations_ = std::make_shared<std::set<CoreQueueReceiver<NodeOutput> *>>();
+	destinations_ = std::make_shared<std::set<CoreReceiver<NodeOutput> *>>();
   }
 
   ~CoreQueueSender() override {HLOG_SELF(0, "Destructing CoreQueueSender")}
 
-  virtual std::shared_ptr<std::set<CoreQueueReceiver<NodeOutput> *>> const &destinations() const {
+  virtual std::shared_ptr<std::set<CoreReceiver<NodeOutput> *>> const &destinations() const {
 	return destinations_;
   }
 
   void addReceiver(CoreReceiver<NodeOutput> *receiver) override {
 	HLOG_SELF(0, "Add receiver " << receiver->name() << "(" << receiver->id() << ")")
 	for (auto queueReceiver: receiver->receivers()) {
-	  auto r = dynamic_cast<CoreQueueReceiver<NodeOutput> *>(queueReceiver);
-	  assert(r != nullptr);
-	  this->destinations_->insert(r);
+	  if(auto r = dynamic_cast<CoreReceiver<NodeOutput> *>(queueReceiver)){
+        this->destinations_->insert(r);
+      }else{
+        std::cerr << "Error linkage QUEUE Sender/ Receiver" << std::endl;
+      }
 	}
   }
 
   void removeReceiver(CoreReceiver<NodeOutput> *receiver) override {
 	HLOG_SELF(0, "Remove receiver " << receiver->name() << "(" << receiver->id() << ")")
 	for (auto queueReceiver: receiver->receivers()) {
-	  auto r = dynamic_cast<CoreQueueReceiver<NodeOutput> *>(queueReceiver);
-	  assert(r != nullptr);
-	  this->destinations_->erase(r);
+      if(auto r = dynamic_cast<CoreReceiver<NodeOutput> *>(queueReceiver)){
+        this->destinations_->erase(r);
+      }else{
+        std::cerr << "Error linkage QUEUE Sender/ Receiver" << std::endl;
+      }
 	}
   }
 
   void sendAndNotify(std::shared_ptr<NodeOutput> ptr) final {
-	for (CoreQueueReceiver<NodeOutput> *receiver : *(this->destinations_)) {
+	for (CoreReceiver<NodeOutput> *receiver : *(this->destinations_)) {
 	  HLOG_SELF(2, "Send data to " << receiver->name() << "(" << receiver->id() << ")")
 	  receiver->receive(ptr);
 	  HLOG_SELF(2, "Wake up " << receiver->name() << "(" << receiver->id() << ")")
@@ -57,7 +61,7 @@ class CoreQueueSender : public CoreSender<NodeOutput>, public virtual CoreQueueN
 
   void visit(AbstractPrinter *printer) override {
 	HLOG_SELF(1, "Visit")
-	for (CoreQueueReceiver<NodeOutput> *receiver : *(this->destinations())) {
+	for (CoreReceiver<NodeOutput> *receiver : *(this->destinations())) {
 	  if (receiver->type() != NodeType::Switch || receiver->type() != NodeType::ExecutionPipeline) {
 		printer->printEdge(this,
 						   receiver,
@@ -80,7 +84,7 @@ class CoreQueueSender : public CoreSender<NodeOutput>, public virtual CoreQueueN
  protected:
   void duplicateEdge(CoreNode *duplicateNode,
 					 std::map<CoreNode *, std::shared_ptr<CoreNode>> &correspondenceMap) override {
-	for (CoreQueueReceiver<NodeOutput> *originalReceiver : *(this->destinations())) {
+	for (CoreReceiver<NodeOutput> *originalReceiver : *(this->destinations())) {
 	  auto nodeReceiverFound = correspondenceMap.find(static_cast<CoreNode *>(originalReceiver));
 	  if (nodeReceiverFound != correspondenceMap.end()) {
 		if (nodeReceiverFound->second->id() == this->id()) {

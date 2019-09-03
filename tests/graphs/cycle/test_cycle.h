@@ -2,6 +2,7 @@
 #include "tasks/my_task.h"
 #include "tasks/my_task_2.h"
 
+#include "../../../hedgehog/tools/graph_signal_handler.h"
 void testCycles() {
   for(int r = 0; r < 100; ++r) {
     int count = 0;
@@ -17,6 +18,7 @@ void testCycles() {
     myGraph->addEdge(myTask1, stateManager);
     myGraph->output(stateManager);
     myGraph->executeGraph();
+
 
     for (int i = 0; i < 100; i++) {
       myGraph->pushData(std::make_shared<int>(i));

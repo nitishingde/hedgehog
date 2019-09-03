@@ -13,14 +13,8 @@ class CoreGraphReceiver : public virtual CoreReceiver<GraphInput> {
   std::unique_ptr<std::set<CoreReceiver<GraphInput> *>> graphReceiverInputs_ = nullptr;
 
  public:
-  CoreGraphReceiver(std::string_view const &name, NodeType const type, size_t const numberThreads) : CoreNode(name,
-																											  type,
-																											  numberThreads),
-																									 CoreReceiver<
-																										 GraphInput>(
-																										 name,
-																										 type,
-																										 numberThreads) {
+  CoreGraphReceiver(std::string_view const &name, NodeType const type, size_t const numberThreads)
+  : CoreNode(name, type, numberThreads), CoreReceiver<GraphInput>(name,type,numberThreads) {
 	HLOG_SELF(0, "Creating CoreGraphReceiver with type: " << (int) type << " and name: " << name)
 	this->graphReceiverInputs_ = std::make_unique<std::set<CoreReceiver<GraphInput> *>>();
   }
@@ -44,18 +38,9 @@ class CoreGraphReceiver : public virtual CoreReceiver<GraphInput> {
   }
 
   void receive(std::shared_ptr<GraphInput> ptr) final {
-	/////////////////////////////////////
-//    std::ostringstream oss;
-//	oss << this->id() << "," << this->name() << ", " << ptr;
-//	oss << ":" << std::endl << "\t";
-//	oss << std::endl;
-//	printUnderMutex(oss.str());
-	//////////////////////////////////////////
 	HLOG_SELF(2, "Receive data")
 	for (CoreReceiver<GraphInput> *inputNode: *(this->graphReceiverInputs_)) {
-
 	  inputNode->receive(ptr);
-
 	}
   }
 

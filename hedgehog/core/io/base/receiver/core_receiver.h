@@ -9,6 +9,7 @@
 #include <set>
 #include <shared_mutex>
 #include <algorithm>
+#include "../../queue/receiver/core_queue_slot.h"
 #include "../../../node/core_node.h"
 #include "core_slot.h"
 
@@ -31,8 +32,9 @@ class CoreReceiver : public virtual CoreNode {
 
   virtual void addSender(CoreSender<Input> *) = 0;
   virtual void removeSender(CoreSender<Input> *) = 0;
-  virtual void receive(std::shared_ptr<Input>) = 0;
+  virtual void receive(std::shared_ptr<Input> ) = 0;
   virtual bool receiverEmpty() = 0;
+  virtual CoreQueueSlot *queueSlot() { return nullptr; };
   virtual size_t queueSize() { return 0; }
   virtual size_t maxQueueSize() { return 0; }
 
