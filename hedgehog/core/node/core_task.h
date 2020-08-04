@@ -191,7 +191,8 @@ class CoreTask
     }
 
     // Actual computation loop
-    while (!this->callCanTerminate(true)) {
+    // TODO: See if we need to lock or not ..., previously did have too
+    while (!this->callCanTerminate(false)) {
 #ifndef HH_DISABLE_PROFILE
       start = std::chrono::system_clock::now();
 #endif
@@ -237,26 +238,20 @@ class CoreTask
   template<class Input>
   void operateReceiver() {
     HLOG_SELF(2, "Operate receivers")
-    // Lock the mutex
-    this->lockUniqueMutex();
     // Get the receiver with the right type
     auto receiver = static_cast<CoreQueueReceiver<Input> *>(this);
     // If receiver's queue not empty
-    if (!receiver->receiverEmpty()) {
       // Get the data
-      std::shared_ptr<Input> data = receiver->popFront();
-      this->incrementNumberReceivedElements();
-      this->unlockUniqueMutex();
-      // Call execute
-      std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
-      static_cast<CoreExecute<Input> *>(this)->callExecute(data);
-      std::chrono::time_point<std::chrono::high_resolution_clock> finish = std::chrono::high_resolution_clock::now();
-      this->incrementPerElementExecutionDuration(std::chrono::duration_cast<std::chrono::microseconds>(finish - start));
 
-    } else {
-      // Unlock the mutex
-      this->unlockUniqueMutex();
-    }
+      auto [hasVal, data] = receiver->popFront();
+      if (hasVal) {
+        this->incrementNumberReceivedElements();
+        // Call execute
+        std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+        static_cast<CoreExecute<Input> *>(this)->callExecute(data);
+        std::chrono::time_point<std::chrono::high_resolution_clock> finish = std::chrono::high_resolution_clock::now();
+        this->incrementPerElementExecutionDuration(std::chrono::duration_cast<std::chrono::microseconds>(finish - start));
+      }
   }
 
   /// @brief Wait method for notification

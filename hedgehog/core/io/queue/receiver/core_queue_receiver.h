@@ -22,6 +22,7 @@
 
 #include "../../base/receiver/core_receiver.h"
 #include "core_queue_slot.h"
+#include "atomic_queue/atomic_queue.h"
 
 /// @brief Hedgehog core namespace
 namespace hh::core {
@@ -31,7 +32,8 @@ namespace hh::core {
 template<class NodeInput>
 class CoreQueueReceiver : public virtual CoreReceiver<NodeInput> {
  private:
-  std::shared_ptr<std::queue<std::shared_ptr<NodeInput>>> queue_ = nullptr;  ///< Waiting list of data to be processed
+//  std::shared_ptr<std::queue<std::shared_ptr<NodeInput>>> queue_ = nullptr;  ///< Waiting list of data to be processed
+  std::shared_ptr<atomic_queue::AtomicQueue2<std::shared_ptr<NodeInput>, 1048576>> queue_ = nullptr;
   std::shared_ptr<std::set<CoreSender < NodeInput> *>> senders_ = nullptr;     ///< Senders connected to this receiver
   size_t maxQueueSize_ = 0;                                                  ///< Maximum queue size registered
 
@@ -43,7 +45,8 @@ class CoreQueueReceiver : public virtual CoreReceiver<NodeInput> {
   CoreQueueReceiver(std::string_view const &name, NodeType const type, size_t const numberThreads) : CoreReceiver<
       NodeInput>(name, type, numberThreads) {
     HLOG_SELF(0, "Creating CoreQueueReceiver with type: " << (int) type << " and name: " << name)
-    queue_ = std::make_shared<std::queue<std::shared_ptr<NodeInput>>>();
+//    queue_ = std::make_shared<std::queue<std::shared_ptr<NodeInput>>>();
+    queue_ = std::make_shared<atomic_queue::AtomicQueue2<std::shared_ptr<NodeInput>, 1048576>>();
     senders_ = std::make_shared<std::set<CoreSender<NodeInput> *>>();
   }
 
@@ -57,7 +60,7 @@ class CoreQueueReceiver : public virtual CoreReceiver<NodeInput> {
 
   /// @brief Return the current waiting data queue size
   /// @return The current waiting data queue size
-  size_t queueSize() override { return this->queue_->size(); }
+  size_t queueSize() override { return this->queue_->was_size(); }
 
   /// @brief Return the maximum current waiting data queue size registered
   /// @return The maximum current waiting data queue size registered
@@ -81,11 +84,10 @@ class CoreQueueReceiver : public virtual CoreReceiver<NodeInput> {
   /// @attention Thread safe
   /// @param data Data to store into the queue
   void receive(std::shared_ptr<NodeInput> data) final {
-    this->queueSlot()->lockUniqueMutex();
-    this->queue_->push(data);
-    HLOG_SELF(2, "Receives data new queue Size " << this->queueSize())
-    if (this->queueSize() > this->maxQueueSize_) { this->maxQueueSize_ = this->queueSize(); }
-    this->queueSlot()->unlockUniqueMutex();
+    queue_->push(data);
+    size_t size = this->queueSize();
+    HLOG_SELF(2, "Receives data new queue Size " << size)
+    if (size > this->maxQueueSize_) { this->maxQueueSize_ = size; }
   }
 
   /// @brief Test emptiness on the queue
@@ -93,7 +95,7 @@ class CoreQueueReceiver : public virtual CoreReceiver<NodeInput> {
   /// @return  True if the queue is empty, else False
   bool receiverEmpty() final {
     HLOG_SELF(2, "Test queue emptiness")
-    return this->queue_->empty();
+    return this->queue_->was_empty();
   }
 
   /// @brief Receivers accessor
@@ -103,12 +105,13 @@ class CoreQueueReceiver : public virtual CoreReceiver<NodeInput> {
   /// @brief Return the front element of the queue and return it
   /// @attention Not thread safe
   /// @return The queue front element
-  std::shared_ptr<NodeInput> popFront() {
+  std::tuple<bool, std::shared_ptr<NodeInput>> popFront() {
     HLOG_SELF(2, "Pop & front from queue")
-    auto element = queue_->front();
-    assert(element != nullptr);
-    queue_->pop();
-    return element;
+    std::shared_ptr<NodeInput> ret = nullptr;
+
+    auto hasVal = this->queue_->try_pop(ret);
+
+    return {hasVal, ret};
   }
 
   // Suppress wrong static analysis  Used but syntax analysis didn't find it out

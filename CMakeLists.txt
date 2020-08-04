@@ -52,6 +52,8 @@ endif (CUDA_FOUND)
 # NVTX
 find_package(NVTX QUIET)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/atomic_queue/include)
+
 # Targets
 if (LOG)
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules")
