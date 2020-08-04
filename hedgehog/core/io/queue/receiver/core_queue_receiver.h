@@ -22,7 +22,7 @@
 
 #include "../../base/receiver/core_receiver.h"
 #include "core_queue_slot.h"
-#include "atomic_queue/atomic_queue.h"
+#include "../../../external/atomic_queue/include/atomic_queue/atomic_queue.h"
 
 /// @brief Hedgehog core namespace
 namespace hh::core {
