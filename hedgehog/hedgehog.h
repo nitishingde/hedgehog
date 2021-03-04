@@ -15,22 +15,13 @@
 // operation. This software is not intended to be used in any situation where a failure could cause risk of injury or
 // damage to property. The software developed by NIST employees is not subject to copyright protection within the
 // United States.
+//
+// Created by Bardakoff, Alexandre (IntlAssoc) on 9/16/20.
+//
 
+#ifndef HEDGEHOG_CX_HEDGEHOG_H
+#define HEDGEHOG_CX_HEDGEHOG_H
+#include "hedgehog_cx/hedgehog_cx.h"
+#include "hedgehog/hedgehog.h"
 
-#ifndef HEDGEHOG_HEDGEHOG_H
-#define HEDGEHOG_HEDGEHOG_H
-
-/// @brief Main include file, including all files that are used when using Hedgehog
-
-#include "api/graph.h"
-#include "api/abstract_task.h"
-#ifdef HH_USE_CUDA
-#include "api/abstract_cuda_task.h"
-#endif // HH_USE_CUDA
-#include "api/memory_manager/memory_data.h"
-#include "api/memory_manager/static_memory_manager.h"
-#include "api/memory_manager/memory_manager.h"
-#include "api/state_manager/state_manager.h"
-#include "api/abstract_execution_pipeline.h"
-
-#endif //HEDGEHOG_HEDGEHOG_H
+#endif //HEDGEHOG_CX_HEDGEHOG_H

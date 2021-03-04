@@ -32,7 +32,7 @@ link_libraries(${CMAKE_THREAD_LIBS_INIT})
 
 # Add Compile flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 if (NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -pedantic -pthread")
@@ -47,71 +47,7 @@ if (NOT APPLE AND NOT CMAKE_COMPILER_IS_CLANGXX AND NOT MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi")
 endif (NOT APPLE AND NOT CMAKE_COMPILER_IS_CLANGXX AND NOT MSVC)
 
-set(TEST_SRC
-        testAll.cc
-
-        tests/test_link.h
-        tests/test_link.cpp
-        tests/test_link2.h
-        tests/test_link2.cpp
-
-        tests/test_cuda.h
-        tests/test_cycles.h
-        tests/test_small_graph.h
-        tests/test_complex_graph.h
-        tests/test_memory_manager.h
-        tests/test_execution_pipeline.h
-        tests/test_simple_partial_input.h
-        tests/test_execution_pipeline_composition.h
-
-        data_structures/tasks/int_to_int.h
-        data_structures/tasks/link_example.h
-        data_structures/tasks/link2_example.h
-        data_structures/tasks/addition_task.h
-        data_structures/tasks/link_example.cpp
-        data_structures/tasks/link2_example.cpp
-        data_structures/tasks/int_float_to_int.h
-        data_structures/tasks/int_double_float.h
-        data_structures/tasks/float_to_int_cycle.h
-        data_structures/tasks/int_float_to_double.h
-        data_structures/tasks/int_double_char_to_float.h
-        data_structures/tasks/matrix_row_traversal_task.h
-        data_structures/tasks/matrix_column_traversal_task.h
-        data_structures/tasks/int_to_static_memory_managed_int.h
-        data_structures/tasks/int_to_dynamic_memory_managed_int.h
-        data_structures/tasks/static_memory_managed_int_dynamic_memory_managed_int_to_static_memory_managed_int.h
-
-        data_structures/cuda_tasks/cuda_copy_in_gpu.h
-        data_structures/cuda_tasks/cuda_copy_out_gpu.h
-        data_structures/cuda_tasks/cuda_product_task.h
-        data_structures/cuda_tasks/cuda_link_example.h
-        data_structures/cuda_tasks/cuda_link2_example.h
-        data_structures/cuda_tasks/cuda_link_example.cpp
-        data_structures/cuda_tasks/cuda_link2_example.cpp
-        data_structures/cuda_tasks/cuda_int_to_memory_managed_int.h
-
-        data_structures/execution_pipelines/execution_pipeline_int_to_int.h
-        data_structures/execution_pipelines/execution_pipeline_int_double_to_int.h
-        data_structures/execution_pipelines/execution_pipeline_int_to_static_memory_managed_int.h
-
-        data_structures/states/output_state.h
-        data_structures/states/state_int_float_to_int.h
-        data_structures/states/cuda_input_block_state.h
-        data_structures/states/partial_computation_state.h
-
-        data_structures/state_managers/partial_computation_state_manager.h
-
-        data_structures/datas/data_type.h
-        data_structures/datas/matrix_data.h
-        data_structures/datas/matrix_block_data.h
-        data_structures/datas/cuda_matrix_block_data.h
-        data_structures/datas/static_memory_manage_data.h
-        data_structures/datas/dynamic_memory_manage_data.h
-
-        data_structures/memory_managers/dynamic_memory_manager.h
-
-        utils/cuda_utils.h
-        )
+file(GLOB_RECURSE TEST_SRC *.h* *.c*)
 
 if (CUDA_FOUND)
     find_package(NVTX QUIET)
@@ -126,9 +62,10 @@ if (CUDA_FOUND)
         target_link_libraries(runAllTests ${NVTX_LIBRARIES})
         target_compile_definitions(runAllTests PUBLIC -DHH_USE_NVTX)
     endif()
-
 else (CUDA_FOUND)
     add_executable(runAllTests ${TEST_SRC})
 endif ()
+
+
 
 target_link_libraries(runAllTests gtest gtest_main)

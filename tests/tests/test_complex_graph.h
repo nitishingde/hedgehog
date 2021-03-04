@@ -80,7 +80,9 @@ void testComplexGraph() {
   while (auto result = graph.getBlockingResult()) { count++; }
 
   graph.waitForTermination();
-  graph.createDotFile("my-view.dot", hh::ColorScheme::EXECUTION, hh::StructureOptions::ALL);
+  graph.createDotFile("my-view.dot",
+                      hh::ColorScheme::EXECUTION, hh::StructureOptions::ALL, hh::DebugOptions::NONE,
+                      true);
 
   ASSERT_EQ(count, 19200);
 }

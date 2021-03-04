@@ -4,7 +4,7 @@ The API is designed to aid in creating task graphs for algorithms to obtain perf
 
 ## Dependencies
 
-1) C++17 compiler, with std::filesystem available (gcc 8+, llvm 7+) 
+1) C++20 compiler, with std::filesystem available (gcc 10.2+, llvm 11+) 
 
 2) pthread
 

@@ -16,14 +16,10 @@
 // damage to property. The software developed by NIST employees is not subject to copyright protection within the
 // United States.
 
-
-#include <hedgehog/api/graph.h>
-
-#include "test_link.h"
-
-#include <hedgehog/api/tools/graph_signal_handler.h>
-
 #include <gtest/gtest.h>
+#include <hedgehog/hedgehog.h>
+#include "test_link2.h"
+
 #ifdef HH_USE_CUDA
 #include "../data_structures/cuda_tasks/cuda_link_example.h"
 #include "../data_structures/cuda_tasks/cuda_link2_example.h"
@@ -32,10 +28,7 @@
 #include "../data_structures/tasks/link2_example.h"
 #endif
 
-
-
 void testLink2() {
-
   hh::Graph<int, int> g("SimpleLinkGraph");
 #ifdef HH_USE_CUDA
   auto t = std::make_shared<CudaLinkExample>();
@@ -59,12 +52,9 @@ void testLink2() {
 
   g.finishPushingData();
 
-  while((g.getBlockingResult())) {
-    ++count;
-  }
+  while ((g.getBlockingResult())) { ++count; }
 
   g.waitForTermination();
 
-  ASSERT_EQ(count, (size_t)100);
-
+  ASSERT_EQ(count, (size_t) 100);
 }
