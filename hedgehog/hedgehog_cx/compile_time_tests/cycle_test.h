@@ -38,8 +38,11 @@ namespace hh::cx::test {
 /// @tparam GraphType Graph type
 /// @tparam NodesNumber Maximum number of nodes in the graph (will be deleted when the constexpr std::vector will be available)
 /// @tparam MaximumNumberCycles Maximum number of cycles that can be found (will be deleted when the constexpr std::vector will be available)
-template<hh::HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20, size_t MaximumNumberCycles = 100>
-class CycleTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber> {
+/// @tparam LengthErrorMessage Maximum length error message (will be deleted when the constexpr std::vector will be
+/// available)
+template<hh::HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20, size_t MaximumNumberCycles =
+    100, size_t LengthErrorMessage = 255>
+class CycleTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber, LengthErrorMessage> {
   /// @brief Simple representation of a subgraph used to detect cycles
   /// @attention Use with caution, less check are made to build the graph, are they are already made in the CXGraph
   class SimpleSubGraph {
@@ -59,7 +62,7 @@ class CycleTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber> {
     /// @brief Create a subgraph from a graph. Add only nodes from a minimum node ID.
     /// @param graph Graph to extract nodes from.
     /// @param minNodeId Minimum id of nodes extracted
-    constexpr SimpleSubGraph(CXGraph<GraphType, NodesNumber> const *graph, size_t minNodeId) {
+    constexpr SimpleSubGraph(CXGraph<GraphType, NodesNumber, LengthErrorMessage> const *graph, size_t minNodeId) {
       for (size_t nodeId = minNodeId; nodeId < graph->numberNodesRegistered(); ++nodeId) {
         registeredNodes_.push_back(graph->node(nodeId));
       }
@@ -194,13 +197,13 @@ class CycleTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber> {
 
  public:
   /// @brief Default constructor
-  constexpr CycleTest() : hh::cx::CXAbstractTest<GraphType, NodesNumber>("Johnson") {}
+  constexpr CycleTest() : hh::cx::CXAbstractTest<GraphType, NodesNumber, LengthErrorMessage>("Johnson") {}
   /// @brief Default destructor
   constexpr virtual ~CycleTest() = default;
 
   /// @brief Test a graph to detect cycles
   /// @param graph Graph to test
-  constexpr virtual void test(CXGraph<GraphType, NodesNumber> const *graph) {
+  constexpr virtual void test(CXGraph<GraphType, NodesNumber, LengthErrorMessage> const *graph) {
     findAllCycles(graph);
     removeCyclesWhereNodesRedefineCanTerminate();
     if (johnsonCycles_.empty()) {
@@ -209,10 +212,10 @@ class CycleTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber> {
       this->isGraphValid(false);
       this->errorMessage_.push_back("Cycles found, the canTerminate() method needs to be defined for each of these "
                                     "cycles.");
-      for (const auto cycle : johnsonCycles_) {
+      for (const auto & cycle : johnsonCycles_) {
         this->errorMessage_.push_back("\n\t");
         auto origin = cycle.at(0);
-        for (const auto node : cycle) {
+        for (const auto & node : cycle) {
           this->errorMessage_.push_back(node->name());
           this->errorMessage_.push_back(" -> ");
         }
@@ -224,7 +227,7 @@ class CycleTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber> {
  private:
   /// @brief Find all cycles in the graph
   /// @param graph Graph to get the cycles from
-  constexpr void findAllCycles(CXGraph<GraphType, NodesNumber> const *graph) {
+  constexpr void findAllCycles(CXGraph<GraphType, NodesNumber, LengthErrorMessage> const *graph) {
     size_t startIndex = 0;
     while (startIndex < graph->numberNodesRegistered()) {
       initTarjan();
@@ -336,8 +339,8 @@ class CycleTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber> {
       SimpleSubGraph minSubGraph;
 
       vector_cx<size_t, MaximumNumberCycles> minIndexes{};
-      for (auto sender : subGraph.registeredNodes()) {
-        for (auto receiver : subGraph.registeredNodes()) {
+      for (auto & sender : subGraph.registeredNodes()) {
+        for (auto & receiver : subGraph.registeredNodes()) {
           if (subGraph.isLinked(sender, receiver)) {
             if (cxVectorContain(minSCC, sender) && cxVectorContain(minSCC, sender)) {
               minSubGraph.addEdge(sender, receiver);
@@ -428,7 +431,6 @@ class CycleTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber> {
     }
     johnsonCycles_ = temp;
   }
-
 };
 
 }

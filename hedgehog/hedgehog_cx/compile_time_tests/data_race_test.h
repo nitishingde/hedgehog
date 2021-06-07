@@ -35,17 +35,19 @@ namespace hh::cx::test {
 /// - All receivers use the data with a read-write policy
 /// @tparam GraphType Graph type
 /// @tparam NodesNumber Maximum number of nodes in the graph (will be deleted when the constexpr std::vector will be available)
-template<hh::HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20>
-class DataRaceTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber> {
+/// @tparam LengthErrorMessage Maximum length error message (will be deleted when the constexpr std::vector will be
+/// available)
+template<hh::HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20, size_t LengthErrorMessage = 255>
+class DataRaceTest : public hh::cx::CXAbstractTest<GraphType, NodesNumber, LengthErrorMessage> {
  public:
   /// @brief Default constructor
-  constexpr DataRaceTest() : hh::cx::CXAbstractTest<GraphType, NodesNumber>("Data races test") {}
+  constexpr DataRaceTest() : hh::cx::CXAbstractTest<GraphType, NodesNumber, LengthErrorMessage>("Data races test") {}
   /// @brief Default destructor
   constexpr virtual ~DataRaceTest() = default;
  private:
   /// @brief Run the data race test on the graph
   /// @param graph Graph instance to test
-  constexpr virtual void test(hh::cx::CXGraph<GraphType, NodesNumber> const *graph) {
+  constexpr virtual void test(hh::cx::CXGraph<GraphType, NodesNumber, LengthErrorMessage> const *graph) {
     this->errorMessage_.push_back("Potential data races found between these nodes:");
     for (auto elem : graph->registeredNodes()) {
       if (!elem->isOutputConst()) {

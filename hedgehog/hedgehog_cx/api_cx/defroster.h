@@ -35,7 +35,9 @@ namespace hh::cx {
 /// @brief Graph representation used during the compile-time analysis.
 /// @tparam GraphType Dynamic graph type represented by the CXGraph
 /// @tparam NodesNumber Maximum number of nodes in the graph (will be deleted when the constexpr std::vector will be available)
-template<HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber>
+/// @tparam LengthErrorMessage Maximum length error message (will be deleted when the constexpr std::vector will be
+/// available)
+template<HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber, size_t LengthErrorMessage>
 class CXGraph;
 #endif //DOXYGEN_SHOULD_SKIP_THIS
 
@@ -46,7 +48,9 @@ class CXGraph;
 /// Hedgehog graph.
 /// @tparam GraphType Graph type
 /// @tparam NodesNumber Maximum number of nodes in the graph (will be deleted when the constexpr std::vector will be available)
-template<HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20>
+/// @tparam LengthErrorMessage Maximum length error message (will be deleted when the constexpr std::vector will be
+/// available)
+template<HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20, size_t LengthErrorMessage = 255>
 class Defroster {
  private:
   bool
@@ -55,7 +59,7 @@ class Defroster {
   std::string_view
       graphName_{}; ///< Graph's name to be tested
 
-  vector_cx<std::pair<std::string_view, vector_cx<std::string_view, 255>>, 255>
+  vector_cx<std::pair<std::string_view, vector_cx<std::string_view, LengthErrorMessage>>, 255>
       errorMessages_; ///< List of error messages from the different compile_time_tests
 
   vector_cx<std::string_view, NodesNumber>
@@ -71,7 +75,7 @@ class Defroster {
   /// be extracted and the compile_time_tests will be invoked. The validity of the graph and the error message will be updated
   /// consequently.
   /// @param g The Graph to defrost
-  constexpr explicit Defroster(CXGraph<GraphType, NodesNumber> const &g) : adjacencyMatrix_(g.adjacencyMatrix_){
+  constexpr explicit Defroster(CXGraph<GraphType, NodesNumber, LengthErrorMessage> const &g) : adjacencyMatrix_(g.adjacencyMatrix_){
     graphName_ = g.name();
 
     // Copy all the internal representation

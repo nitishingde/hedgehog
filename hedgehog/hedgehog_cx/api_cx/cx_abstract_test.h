@@ -37,7 +37,9 @@ namespace hh::cx {
 /// graph did not pass the test, it should be marked as "not valid" and the error message will be reported.
 /// @tparam GraphType Graph type
 /// @tparam NodesNumber Maximum number of nodes in the graph (will be deleted when the constexpr std::vector will be available)
-template<HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20>
+/// @tparam LengthErrorMessage Maximum length error message (will be deleted when the constexpr std::vector will be
+/// available)
+template<HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20, size_t LengthErrorMessage = 255>
 class CXAbstractTest {
  private:
   std::string_view
@@ -47,7 +49,7 @@ class CXAbstractTest {
       isGraphValid_ = false; ///< Validity of the graph against the test
 
  protected:
-  vector_cx<std::string_view, 255>
+  vector_cx<std::string_view, LengthErrorMessage>
       errorMessage_; ///< Error message
 
  public:
@@ -59,7 +61,7 @@ class CXAbstractTest {
   /// @brief Test implementation. This method should test the graph, set if the graph is valid against the test and set
   /// the error message if not.
   /// @param graph Graph to test
-  constexpr virtual void test(CXGraph<GraphType, NodesNumber> const *graph) = 0;
+  constexpr virtual void test(CXGraph<GraphType, NodesNumber, LengthErrorMessage> const *graph) = 0;
   /// @brief Graph validity setter
   /// @param isGraphValid Set if the graph is valid against the test or not
   constexpr void isGraphValid(bool isGraphValid) { isGraphValid_ = isGraphValid; }
@@ -72,7 +74,7 @@ class CXAbstractTest {
   /// @brief Error message getter. The error message is represented by hedgehog vector of words. These words will be
   /// separated by spaces when reported.
   /// @return Error message
-  [[nodiscard]] constexpr vector_cx<std::string_view, 255> const &errorMessage() const { return errorMessage_; }
+  [[nodiscard]] constexpr vector_cx<std::string_view, LengthErrorMessage> const &errorMessage() const { return errorMessage_; }
 };
 
 }

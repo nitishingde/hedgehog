@@ -30,10 +30,10 @@
 namespace hh::cx {
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-template<HedgehogDynamicGraphForStaticAnalysis, size_t>
+template<HedgehogDynamicGraphForStaticAnalysis, size_t, size_t>
 class Defroster;
 
-template<HedgehogDynamicGraphForStaticAnalysis, size_t>
+template<HedgehogDynamicGraphForStaticAnalysis, size_t, size_t>
 class CXAbstractTest;
 #endif //DOXYGEN_SHOULD_SKIP_THIS
 
@@ -49,12 +49,14 @@ class CXAbstractTest;
 /// GraphType(std::string_view const &)
 /// @tparam GraphType Graph type
 /// @tparam NodesNumber Maximum number of nodes in the graph (will be deleted when the constexpr std::vector will be available)
-template<HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20>
+/// @tparam LengthErrorMessage Maximum length error message (will be deleted when the constexpr std::vector will be
+/// available)
+template<HedgehogDynamicGraphForStaticAnalysis GraphType, size_t NodesNumber = 20, size_t LengthErrorMessage = 255>
 class CXGraph : public CXNode<GraphType> {
  private:
   /// @brief Defroster friend declaration
   /// @relates Defroster<GraphType, NodesNumber>
-  friend Defroster<GraphType, NodesNumber>;
+  friend Defroster<GraphType, NodesNumber, LengthErrorMessage>;
 
   vector_cx<hh::cx::behavior::AbstractNode const *, NodesNumber>
       registeredNodes_{}, ///< Registered nodes, position is an ID for the adjacency matrix, the names, the RO edges...
@@ -65,7 +67,7 @@ class CXGraph : public CXNode<GraphType> {
       adjacencyMatrix_{}, ///< Adjacency Matrix
       ROEdges_{}; ///< Edges declared as Read Only
 
-  vector_cx<CXAbstractTest<GraphType, NodesNumber> *, 255>
+  vector_cx<CXAbstractTest<GraphType, NodesNumber, LengthErrorMessage> *, 255>
       tests_{}; ///< Test associated
 
  public:
@@ -162,7 +164,7 @@ class CXGraph : public CXNode<GraphType> {
   /// @tparam UserTest Test type, should derive from the CXAbstractTest
   /// @param test instance of the test to add
   template<class UserTest>
-  requires std::is_base_of_v<CXAbstractTest<GraphType, NodesNumber>, UserTest>
+  requires std::is_base_of_v<CXAbstractTest<GraphType, NodesNumber, LengthErrorMessage>, UserTest>
   constexpr void addTest(UserTest &test) {
     // Add the test if not already added
     if (std::find(tests_.cbegin(), tests_.cend(), &test) == tests_.cend()) {

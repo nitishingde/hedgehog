@@ -19,6 +19,7 @@
 #include "compile_time_analysis/test_cycle_improved.h"
 #include "compile_time_analysis/test_basic.h"
 #include "compile_time_analysis/test_matrix_multiplication.h"
+#include "compile_time_analysis/test_error_message.h"
 
 #ifdef HH_USE_CUDA
 #include "tests/test_cuda.h"
@@ -88,6 +89,10 @@ TEST(TEST_STATIC_ANALYSIS, TEST_COMPOSITION){
 TEST(TEST_STATIC_ANALYSIS, TEST_BASIC){
   ASSERT_NO_FATAL_FAILURE(testTarjanNoCylce());
   ASSERT_NO_FATAL_FAILURE(testSameNodeType());
+}
+
+TEST(TEST_STATIC_ANALYSIS, TEST_ERROR_MESSAGE){
+  ASSERT_NO_FATAL_FAILURE(testErrorMessage());
 }
 
 TEST(TEST_STATIC_ANALYSIS, MATRIX_MULTIPLICATION){
