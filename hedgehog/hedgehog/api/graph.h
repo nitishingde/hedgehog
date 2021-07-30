@@ -151,7 +151,7 @@ class Graph :
   /// @brief hedgehog node as input for the graph
   /// @tparam UserDefinedInput Node's type that could be an input
   /// @param input shared_ptr of node to set as Graph's input
-  template<HedgehogConnectableNode UserDefinedInput>
+  template<HedgehogMultiReceiver UserDefinedInput>
   void input(std::shared_ptr<UserDefinedInput> input) {
     using NodeInputs = typename UserDefinedInput::inputs_t;
     using NodeMR = typename helper::HelperMultiReceiversType<NodeInputs>::type;
@@ -167,8 +167,7 @@ class Graph :
   /// @tparam UserDefinedSender Node's type
   /// @tparam IsSender Defined if UserDefinedSender is derived from sender and has the same output as Graph's output
   /// @param output Node to set as Graph's output
-
-  template<HedgehogConnectableNode UserDefinedOutput>
+  template<HedgehogSender UserDefinedOutput>
   void output(std::shared_ptr<UserDefinedOutput> output) {
     static_assert(
         std::is_base_of_v<behavior::Sender<GraphOutput>, UserDefinedOutput>,
@@ -187,7 +186,7 @@ class Graph :
   /// @tparam IsMultiReceivers Defined if UserDefinedMultiReceiver is derived from MultiReceivers
   /// @param from Node that will send the data
   /// @param to Node that will receiver the data
-  template<HedgehogConnectableNode UserDefinedSender, HedgehogConnectableNode UserDefinedMultiReceiver>
+  template<HedgehogSender UserDefinedSender, HedgehogMultiReceiver UserDefinedMultiReceiver>
   void addEdge(std::shared_ptr<UserDefinedSender> from, std::shared_ptr<UserDefinedMultiReceiver> to) {
     using output_t = typename UserDefinedSender::output_t;
     using inputs_t = typename UserDefinedMultiReceiver::inputs_t;

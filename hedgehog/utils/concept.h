@@ -76,6 +76,8 @@ concept HedgehogConnectableNode = HedgehogNode<DynamicHedgehogNode>
 template<typename DynamicHedgehogNode>
 concept HedgehogDynamicGraphForStaticAnalysis = HedgehogConnectableNode<DynamicHedgehogNode>
     // A constructor with only a name(DynamicHedgehogNode(std::string_view const &)) needs to be defined
+    && std::is_base_of_v<typename hh::helper::HelperGraphType<typename DynamicHedgehogNode::output_t, typename
+    DynamicHedgehogNode::inputs_t>::type, DynamicHedgehogNode>
     && std::is_constructible_v<DynamicHedgehogNode, std::string_view const &>;
 }
 
