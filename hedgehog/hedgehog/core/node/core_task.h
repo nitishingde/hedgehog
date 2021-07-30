@@ -1,7 +1,7 @@
-// NIST-developed software is provided by NIST as hedgehog public service. You may use, copy and distribute copies of the
+// NIST-developed software is provided by NIST as a public service. You may use, copy and distribute copies of the
 // software in any medium, provided that you keep intact this entire notice. You may improve, modify and create
 // derivative works of the software or any portion of the software, and you may copy and distribute such modifications
-// or works. Modified works should carry hedgehog notice stating that you changed the software and should note the date and
+// or works. Modified works should carry a notice stating that you changed the software and should note the date and
 // nature of any such change. Please explicitly acknowledge the National Institute of Standards and Technology as the
 // source of the software. NIST-developed software is expressly provided "AS IS." NIST MAKES NO WARRANTY OF ANY KIND,
 // EXPRESS, IMPLIED, IN FACT OR ARISING BY OPERATION OF LAW, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTY OF
@@ -12,9 +12,10 @@
 // are solely responsible for determining the appropriateness of using and distributing the software and you assume
 // all risks associated with its use, including but not limited to the risks and costs of program errors, compliance
 // with applicable laws, damage to or loss of data, programs or equipment, and the unavailability or interruption of 
-// operation. This software is not intended to be used in any situation where hedgehog failure could cause risk of injury or
+// operation. This software is not intended to be used in any situation where a failure could cause risk of injury or
 // damage to property. The software developed by NIST employees is not subject to copyright protection within the
 // United States.
+
 
 
 #ifndef HEDGEHOG_CORE_TASK_H
@@ -183,7 +184,7 @@ class CoreTask
       (static_cast<CoreExecute<TaskInputs> *>(this)->callExecute(nullptr), ...);
 #ifndef HH_DISABLE_PROFILE
       finish = std::chrono::system_clock::now();
-      this->incrementExecutionDuration(std::chrono::duration_cast<std::chrono::microseconds>(finish - start));
+      this->incrementExecutionDuration(std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start));
 #endif
     }
 
@@ -196,7 +197,7 @@ class CoreTask
       volatile bool canTerminate = this->waitForNotification();
 #ifndef HH_DISABLE_PROFILE
       finish = std::chrono::system_clock::now();
-      this->incrementWaitDuration(std::chrono::duration_cast<std::chrono::microseconds>(finish - start));
+      this->incrementWaitDuration(std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start));
 #endif
       // If can terminate break the loop early
       if (canTerminate) { break; }
@@ -207,7 +208,7 @@ class CoreTask
       (this->operateReceiver<TaskInputs>(), ...);
 #ifndef HH_DISABLE_PROFILE
       finish = std::chrono::system_clock::now();
-      this->incrementExecutionDuration(std::chrono::duration_cast<std::chrono::microseconds>(finish - start));
+      this->incrementExecutionDuration(std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start));
 #endif
     }
 
@@ -245,11 +246,10 @@ class CoreTask
       this->incrementNumberReceivedElements();
       this->unlockUniqueMutex();
       // Call execute
-      std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
+      std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
       static_cast<CoreExecute<Input> *>(this)->callExecute(data);
-      std::chrono::time_point<std::chrono::high_resolution_clock> finish = std::chrono::high_resolution_clock::now();
-      this->incrementPerElementExecutionDuration(std::chrono::duration_cast<std::chrono::microseconds>(finish - start));
-
+      std::chrono::time_point<std::chrono::system_clock> finish = std::chrono::system_clock::now();
+      this->incrementPerElementExecutionDuration(std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start));
     } else {
       // Unlock the mutex
       this->unlockUniqueMutex();

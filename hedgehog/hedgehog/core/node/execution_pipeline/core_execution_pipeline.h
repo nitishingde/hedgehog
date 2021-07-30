@@ -1,7 +1,7 @@
-// NIST-developed software is provided by NIST as hedgehog public service. You may use, copy and distribute copies of the
+// NIST-developed software is provided by NIST as a public service. You may use, copy and distribute copies of the
 // software in any medium, provided that you keep intact this entire notice. You may improve, modify and create
 // derivative works of the software or any portion of the software, and you may copy and distribute such modifications
-// or works. Modified works should carry hedgehog notice stating that you changed the software and should note the date and
+// or works. Modified works should carry a notice stating that you changed the software and should note the date and
 // nature of any such change. Please explicitly acknowledge the National Institute of Standards and Technology as the
 // source of the software. NIST-developed software is expressly provided "AS IS." NIST MAKES NO WARRANTY OF ANY KIND,
 // EXPRESS, IMPLIED, IN FACT OR ARISING BY OPERATION OF LAW, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTY OF
@@ -12,9 +12,10 @@
 // are solely responsible for determining the appropriateness of using and distributing the software and you assume
 // all risks associated with its use, including but not limited to the risks and costs of program errors, compliance
 // with applicable laws, damage to or loss of data, programs or equipment, and the unavailability or interruption of 
-// operation. This software is not intended to be used in any situation where hedgehog failure could cause risk of injury or
+// operation. This software is not intended to be used in any situation where a failure could cause risk of injury or
 // damage to property. The software developed by NIST employees is not subject to copyright protection within the
 // United States.
+
 #include <utility>
 
 
@@ -215,10 +216,10 @@ class CoreExecutionPipeline : public CoreTask<GraphOutput, GraphInputs...> {
 
   /// @brief Return the maximum execution time of all inside graphs
   /// @return Maximum execution time of all inside graphs
-  [[nodiscard]] std::chrono::duration<double, std::micro> maxExecutionTime() const override {
-    std::chrono::duration<double, std::micro> ret = std::chrono::duration<double, std::micro>::min();
+  [[nodiscard]] std::chrono::nanoseconds maxExecutionTime() const override {
+    std::chrono::nanoseconds ret = std::chrono::nanoseconds::min();
     for (auto graph: epGraphs_) {
-      std::chrono::duration<double, std::micro> temp = graph->maxExecutionTime();
+      std::chrono::nanoseconds temp = graph->maxExecutionTime();
       if (temp > ret) ret = temp;
     }
     return ret;
@@ -226,10 +227,10 @@ class CoreExecutionPipeline : public CoreTask<GraphOutput, GraphInputs...> {
 
   /// @brief Return the minimum execution time of all inside graphs
   /// @return Minimum execution time of all inside graphs
-  [[nodiscard]] std::chrono::duration<double, std::micro> minExecutionTime() const override {
-    std::chrono::duration<double, std::micro> ret = std::chrono::duration<double, std::micro>::max();
+  [[nodiscard]] std::chrono::nanoseconds minExecutionTime() const override {
+    std::chrono::nanoseconds ret = std::chrono::nanoseconds::max();
     for (auto graph: epGraphs_) {
-      std::chrono::duration<double, std::micro> temp = graph->minExecutionTime();
+      std::chrono::nanoseconds temp = graph->minExecutionTime();
       if (temp < ret) ret = temp;
     }
     return ret;
@@ -237,10 +238,10 @@ class CoreExecutionPipeline : public CoreTask<GraphOutput, GraphInputs...> {
 
   /// @brief Return the maximum wait time of all inside graphs
   /// @return Maximum wait time of all inside graphs
-  [[nodiscard]] std::chrono::duration<double, std::micro> maxWaitTime() const override {
-    std::chrono::duration<double, std::micro> ret = std::chrono::duration<double, std::micro>::min();
+  [[nodiscard]] std::chrono::nanoseconds maxWaitTime() const override {
+    std::chrono::nanoseconds ret = std::chrono::nanoseconds::min();
     for (auto graph: epGraphs_) {
-      std::chrono::duration<double, std::micro> temp = graph->maxWaitTime();
+      std::chrono::nanoseconds temp = graph->maxWaitTime();
       if (temp > ret) ret = temp;
     }
     return ret;
@@ -248,10 +249,10 @@ class CoreExecutionPipeline : public CoreTask<GraphOutput, GraphInputs...> {
 
   /// @brief Return the minimum wait time of all inside graphs
   /// @return Minimum wait time of all inside graphs
-  [[nodiscard]] std::chrono::duration<double, std::micro> minWaitTime() const override {
-    std::chrono::duration<double, std::micro> ret = std::chrono::duration<double, std::micro>::max();
+  [[nodiscard]] std::chrono::nanoseconds minWaitTime() const override {
+    std::chrono::nanoseconds ret = std::chrono::nanoseconds::max();
     for (auto graph: epGraphs_) {
-      std::chrono::duration<double, std::micro> temp = graph->minWaitTime();
+      std::chrono::nanoseconds temp = graph->minWaitTime();
       if (temp < ret) ret = temp;
     }
     return ret;

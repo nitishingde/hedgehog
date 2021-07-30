@@ -1,7 +1,7 @@
-// NIST-developed software is provided by NIST as hedgehog public service. You may use, copy and distribute copies of the
+// NIST-developed software is provided by NIST as a public service. You may use, copy and distribute copies of the
 // software in any medium, provided that you keep intact this entire notice. You may improve, modify and create
 // derivative works of the software or any portion of the software, and you may copy and distribute such modifications
-// or works. Modified works should carry hedgehog notice stating that you changed the software and should note the date and
+// or works. Modified works should carry a notice stating that you changed the software and should note the date and
 // nature of any such change. Please explicitly acknowledge the National Institute of Standards and Technology as the
 // source of the software. NIST-developed software is expressly provided "AS IS." NIST MAKES NO WARRANTY OF ANY KIND,
 // EXPRESS, IMPLIED, IN FACT OR ARISING BY OPERATION OF LAW, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTY OF
@@ -12,9 +12,10 @@
 // are solely responsible for determining the appropriateness of using and distributing the software and you assume
 // all risks associated with its use, including but not limited to the risks and costs of program errors, compliance
 // with applicable laws, damage to or loss of data, programs or equipment, and the unavailability or interruption of 
-// operation. This software is not intended to be used in any situation where hedgehog failure could cause risk of injury or
+// operation. This software is not intended to be used in any situation where a failure could cause risk of injury or
 // damage to property. The software developed by NIST employees is not subject to copyright protection within the
 // United States.
+
 
 
 #ifndef HEDGEHOG_GRAPH_H

@@ -1,7 +1,7 @@
-// NIST-developed software is provided by NIST as hedgehog public service. You may use, copy and distribute copies of the
+// NIST-developed software is provided by NIST as a public service. You may use, copy and distribute copies of the
 // software in any medium, provided that you keep intact this entire notice. You may improve, modify and create
 // derivative works of the software or any portion of the software, and you may copy and distribute such modifications
-// or works. Modified works should carry hedgehog notice stating that you changed the software and should note the date and
+// or works. Modified works should carry a notice stating that you changed the software and should note the date and
 // nature of any such change. Please explicitly acknowledge the National Institute of Standards and Technology as the
 // source of the software. NIST-developed software is expressly provided "AS IS." NIST MAKES NO WARRANTY OF ANY KIND,
 // EXPRESS, IMPLIED, IN FACT OR ARISING BY OPERATION OF LAW, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTY OF
@@ -12,9 +12,10 @@
 // are solely responsible for determining the appropriateness of using and distributing the software and you assume
 // all risks associated with its use, including but not limited to the risks and costs of program errors, compliance
 // with applicable laws, damage to or loss of data, programs or equipment, and the unavailability or interruption of 
-// operation. This software is not intended to be used in any situation where hedgehog failure could cause risk of injury or
+// operation. This software is not intended to be used in any situation where a failure could cause risk of injury or
 // damage to property. The software developed by NIST employees is not subject to copyright protection within the
 // United States.
+
 
 
 #ifndef HEDGEHOG_CORE_GRAPH_H
@@ -174,10 +175,8 @@ class CoreGraph : public CoreSender<GraphOutput>, public CoreGraphMultiReceivers
 
   /// @brief Compute the maximum execution time for the graph's inside nodes
   /// @return The maximum execution time for the graph's inside nodes
-  [[nodiscard]] std::chrono::duration<double, std::micro> maxExecutionTime() const override {
-    std::chrono::duration<double, std::micro>
-        ret = std::chrono::duration<double, std::micro>::min(),
-        temp{};
+  [[nodiscard]] std::chrono::nanoseconds maxExecutionTime() const override {
+    std::chrono::nanoseconds ret = std::chrono::nanoseconds::min(), temp{};
     std::shared_ptr<CoreNode> core;
     for (auto const &it : *(this->insideNodes())) {
       core = it.second;
@@ -196,8 +195,8 @@ class CoreGraph : public CoreSender<GraphOutput>, public CoreGraphMultiReceivers
 
   /// @brief Compute the minimum execution time for the graph's inside nodes
   /// @return The minimum execution time for the graph's inside nodes
-  [[nodiscard]] std::chrono::duration<double, std::micro> minExecutionTime() const override {
-    std::chrono::duration<double, std::micro> ret = std::chrono::duration<double, std::micro>::max(), temp{};
+  [[nodiscard]] std::chrono::nanoseconds minExecutionTime() const override {
+    std::chrono::nanoseconds ret = std::chrono::nanoseconds::max(), temp{};
     std::shared_ptr<CoreNode> core;
     for (auto const &it : *(this->insideNodes())) {
       core = it.second;
@@ -216,8 +215,8 @@ class CoreGraph : public CoreSender<GraphOutput>, public CoreGraphMultiReceivers
 
   /// @brief Compute the maximum wait time for the graph's inside nodes
   /// @return The maximum wait time for the graph's inside nodes
-  [[nodiscard]] std::chrono::duration<double, std::micro> maxWaitTime() const override {
-    std::chrono::duration<double, std::micro> ret = std::chrono::duration<double, std::micro>::min(), temp{};
+  [[nodiscard]] std::chrono::nanoseconds maxWaitTime() const override {
+    std::chrono::nanoseconds ret = std::chrono::nanoseconds::min(), temp{};
     std::shared_ptr<CoreNode> core;
     for (auto const &it : *(this->insideNodes())) {
       core = it.second;
@@ -236,8 +235,8 @@ class CoreGraph : public CoreSender<GraphOutput>, public CoreGraphMultiReceivers
 
   /// @brief Compute the minimum wait time for the graph's inside nodes
   /// @return The minimum wait time for the graph's inside nodes
-  [[nodiscard]] std::chrono::duration<double, std::micro> minWaitTime() const override {
-    std::chrono::duration<double, std::micro> ret = std::chrono::duration<double, std::micro>::max(), temp{};
+  [[nodiscard]] std::chrono::nanoseconds minWaitTime() const override {
+    std::chrono::nanoseconds ret = std::chrono::nanoseconds::max(), temp{};
     std::shared_ptr<CoreNode> core;
     for (auto const &it : *(this->insideNodes())) {
       core = it.second;
@@ -491,9 +490,6 @@ class CoreGraph : public CoreSender<GraphOutput>, public CoreGraphMultiReceivers
     createInnerClustersAndLaunchThreads();
     auto finishCreationTime = std::chrono::system_clock::now();
     this->creationDuration(finishCreationTime - this->creationTimeStamp());
-//        std::chrono::duration_cast<std::chrono::microseconds>(
-//        finishCreationTime - this->creationTimeStamp())
-//        );
   }
 
   /// @brief Wait for all inside threads to join
@@ -503,8 +499,6 @@ class CoreGraph : public CoreSender<GraphOutput>, public CoreGraphMultiReceivers
     std::chrono::time_point<std::chrono::system_clock>
         endExecutionTimeStamp = std::chrono::system_clock::now();
     this->executionDuration(endExecutionTimeStamp - this->startExecutionTimeStamp());
-//        std::chrono::duration_cast<std::chrono::microseconds>
-//                                (endExecutionTimeStamp - this->startExecutionTimeStamp()));
   }
 
   /// @brief Notify the graph no more input data will be pushed
