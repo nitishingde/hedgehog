@@ -7,6 +7,8 @@ include(ExternalProject)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(MPI)
+
 if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
 endif (MSVC)
@@ -244,7 +246,8 @@ if (BUILD_MAIN)
         target_compile_definitions(main_cuda PUBLIC -DHH_USE_CUDA)
     endif ()
 
-    add_executable(main main.cc ${HEDGEHOG_SRC})
+    add_executable(main main.cc ${HEDGEHOG_SRC} comm.cpp comm.h)
+    target_link_libraries(main PUBLIC MPI::MPI_CXX)
     if (NVTX_FOUND)
         message(STATUS "NVTX Enabled")
         target_compile_definitions(main PUBLIC -DHH_USE_NVTX)
