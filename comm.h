@@ -21,7 +21,7 @@ namespace comm {
      * @return
      */
     bool isMpiRootPid();
-    int getMpiRank();
+    int getMpiNodeId();
     int getMpiNumNodes();
 
     /**

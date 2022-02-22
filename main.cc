@@ -30,14 +30,14 @@ public:
 int main(int argc, char* argv[]) {
     comm::MPI_GlobalLockGuard globalLockGuard(&argc, &argv);
 
-    auto rank = comm::getMpiRank();
+    auto nodeId = comm::getMpiNodeId();
     auto numNodes = comm::getMpiNumNodes();
 
-    int32_t srcId = (numNodes+rank-1)%numNodes;
-    int32_t destId = (rank+1)%numNodes;
+    int32_t srcId = (numNodes+nodeId-1)%numNodes;
+    int32_t destId = (nodeId+1)%numNodes;
 
-    auto send = CommData("rank" + std::to_string(rank), rank);
-    auto recvVarName = "rank" + std::to_string(srcId);
+    auto send = CommData("nodeId" + std::to_string(nodeId), nodeId);
+    auto recvVarName = "nodeId" + std::to_string(srcId);
 
     auto oss = std::ostringstream();
     send.serialize(oss);
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
         std::this_thread::sleep_for(100ms);
     }
     auto recv = CommData::deserialize(comm::Communicator::recvMessage(recvVarName, srcId));
-    printf("[Process %d] data = %d\n", rank, recv.data);
+    printf("[Process %d] data = %d\n", nodeId, recv.data);
 
     return EXIT_SUCCESS;
 }

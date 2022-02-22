@@ -74,7 +74,7 @@ namespace comm {
         };
 
         int32_t numNodes_;
-        int32_t rank_;
+        int32_t nodeId_;
         std::mutex mutex_{};
         std::thread daemonThread_;
         std::atomic_int32_t stopDaemon_ = false;
@@ -118,7 +118,7 @@ comm::DataWarehouse* comm::DataWarehouse::getInstance() {
 
 comm::DataWarehouse::DataWarehouse() {
     numNodes_ = comm::getMpiNumNodes();
-    rank_ = comm::getMpiRank();
+    nodeId_ = comm::getMpiNodeId();
     recvMetadataWindow = MPI_WIN_NULL;
     this->init();
 }
@@ -183,7 +183,7 @@ void comm::DataWarehouse::syncMetadata() {
                     1,
                     MPI_UINT32_T,
                     node,
-                    rank_,
+                    nodeId_,
                     1,
                     MPI_UINT32_T,
                     recvMetadataWindow
@@ -208,7 +208,7 @@ void comm::DataWarehouse::syncMessages() {
                     (int)recvData->buffer.size(),
                     MPI_CHAR,
                     node,
-                    rank_,
+                    nodeId_,
                     MPI_COMM_WORLD,
                     &recvData->request
             );
@@ -295,7 +295,7 @@ bool comm::isMpiRootPid() {
     return sIsMpiRootPid;
 }
 
-int comm::getMpiRank() {
+int comm::getMpiNodeId() {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     return rank;
