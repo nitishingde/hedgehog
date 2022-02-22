@@ -180,6 +180,10 @@ if (BUILD_MAIN)
         link_libraries(stdc++fs)
     endif (CMAKE_COMPILER_IS_CLANGXX)
 
+    #FIXME: hack to remove -Werror flag
+    set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -pthread -ansi")
+    message("@nitish cmake flags: ${CMAKE_CXX_FLAGS}")
+
     set(HEDGEHOG_SRC
             hedgehog/hedgehog.h
 
@@ -248,6 +252,9 @@ if (BUILD_MAIN)
 
     add_executable(main main.cc ${HEDGEHOG_SRC} comm.cpp comm.h)
     target_link_libraries(main PUBLIC MPI::MPI_CXX)
+
+    add_executable(demo demo.cpp ${HEDGEHOG_SRC} comm.cpp comm.h)
+    target_link_libraries(demo PUBLIC MPI::MPI_CXX)
     if (NVTX_FOUND)
         message(STATUS "NVTX Enabled")
         target_compile_definitions(main PUBLIC -DHH_USE_NVTX)
