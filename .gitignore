@@ -18,3 +18,4 @@ auto
 *.mtc0
 /**/version.h
 /**/cmake-build-*/
+.idea/
