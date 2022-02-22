@@ -180,10 +180,6 @@ if (BUILD_MAIN)
         link_libraries(stdc++fs)
     endif (CMAKE_COMPILER_IS_CLANGXX)
 
-    #FIXME: hack to remove -Werror flag
-    set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -pthread -ansi")
-    message("@nitish cmake flags: ${CMAKE_CXX_FLAGS}")
-
     set(HEDGEHOG_SRC
             hedgehog/hedgehog.h
 
