@@ -8,13 +8,6 @@
 
 #include <sstream>
 
-/**
- * Assumptions:
- * VarLabels are variables having global scope over the cluster
- * All VarLabels need to be registered in the beginning. Cannot create new VarLabels dynamically (if you do, need to call sync)
- *
- */
-
 namespace comm {
     /**
      * TODO: All thread safe I think, need to confirm

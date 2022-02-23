@@ -13,7 +13,7 @@
 namespace comm {
     /**
      * Handles all the sends/recvs logic
-     * A startDaemon thread that runs in the background
+     * A daemon thread is spawned to run in the background
      * Each cycle/epoch it
      *  1. syncs the metadata for sends/recvs (blocking)
      *  2. then issues the Isends/Irecvs (non blocking)
@@ -266,7 +266,6 @@ comm::DataWarehouse::~DataWarehouse() {
 
 void comm::DataWarehouse::sendMessage(std::ostringstream &message, int destId) {
     std::lock_guard lg(mutex_);
-//    printf("varlabel size = %d\n", oss.str().size());
     sendQueues_[destId].emplace(std::make_shared<SendData>(
             std::move(message),
             MPI_Request()
