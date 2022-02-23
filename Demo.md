@@ -33,11 +33,11 @@ What is the example trying to accomplish?
 - ...
 - ProcessN/2 sends data to ProcessN/2
 
-Each process owns 5 row blocks, of dim (blockWidth = 2, blockHeight = 2).
-Each of these blocks have been filled with their process's node id.
-So process0 will have 5 blocks of 2x2, all having the values 0.
-So process1 will have 5 blocks of 2x2, all having the values 1.
-...
+Each process owns 5 row blocks, of dim (blockWidth = 2, blockHeight = 2).\
+Each of these blocks have been filled with their process's node id.\
+So process0 will have 5 blocks of 2x2, all having the values 0.\
+So process1 will have 5 blocks of 2x2, all having the values 1.\
+...\
 So processN will have 5 blocks of 2x2, all having the values N.
 
 After receiving these blocks of data, addTask will add 42 to all elements in the block.
