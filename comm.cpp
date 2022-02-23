@@ -4,6 +4,7 @@
 #include "comm.h"
 #include <atomic>
 #include <list>
+#include <map>
 #include <mpi.h>
 #include <mutex>
 #include <queue>
