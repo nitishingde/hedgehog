@@ -33,10 +33,8 @@ namespace comm {
                     : buffer(std::move(buffer)), srcId(srcId), request(request) {}
 
             ~RecvData() = default;
-
             RecvData(RecvData &other) = delete;
-
-            RecvData &operator=(RecvData &other) = delete;
+            RecvData& operator=(RecvData &other) = delete;
 
             RecvData(RecvData &&other) noexcept {
                 if (this == &other) return;
@@ -45,7 +43,7 @@ namespace comm {
                 this->request = other.request;
             }
 
-            RecvData &operator=(RecvData &&other) noexcept {
+            RecvData& operator=(RecvData &&other) noexcept {
                 if (this == &other) return *this;
                 this->buffer = std::move(other.buffer);
                 this->srcId = other.srcId;
@@ -63,15 +61,22 @@ namespace comm {
                     : buffer(std::move(buffer)), request(request) {}
 
             ~SendData() = default;
-
             SendData(SendData &other) = delete;
+            SendData& operator=(SendData &other) = delete;
 
-            SendData &operator=(SendData &other) = delete;
+            SendData(SendData &&other) noexcept {
+                if(this == &other) return;
+                this->buffer = std::move(other.buffer);
+                this->request = other.request;
+            }
 
-            // TODO
-            SendData(SendData &&other) = default;
+            SendData& operator=(SendData &&other) noexcept {
+                if(this == &other) return *this;
+                this->buffer = std::move(other.buffer);
+                this->request = other.request;
 
-            SendData &operator=(SendData &&other) = default;
+                return *this;
+            }
         };
 
         int32_t numNodes_;
