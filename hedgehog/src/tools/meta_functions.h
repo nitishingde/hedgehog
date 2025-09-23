@@ -267,7 +267,7 @@ using LambdaContainerDeducer_t = typename LambdaContainerDeducer<LambdaTaskType,
 /// @return string_view containing the name of the type
 template<typename T>
 constexpr auto typeToStrView() {
-  std::string_view name, prefix, suffix;
+  std::string name, prefix, suffix;
 #ifdef __clang__
   name = __PRETTY_FUNCTION__;
   prefix = "auto hh::tool::typeToStrView() [T = ";
@@ -281,8 +281,8 @@ constexpr auto typeToStrView() {
     prefix = "auto __cdecl typeToStrView<";
     suffix = ">(void)";
 #endif
-  name.remove_prefix(prefix.size());
-  name.remove_suffix(suffix.size());
+  name = name.substr(prefix.size());
+  name.resize(name.size() - suffix.size());
 
   return name;
 }
