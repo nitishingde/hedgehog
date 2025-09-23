@@ -34,8 +34,8 @@ namespace hh {
 /// @tparam Args List of types that should match the constructor of T parameters
 template<class T, class ...Args>
 class StaticMemoryManager : public AbstractMemoryManager {
-  static_assert(std::is_base_of<ManagedMemory, T>::value, "The type managed by the StaticMemoryManager should derive from hh::ManagedMemory.");
-  static_assert(std::is_constructible<T, Args...>::value, "The type managed by the StaticMemoryManager should be constructible with Args type(s).");
+  static_assert(std::is_base_of_v<ManagedMemory, T>, "The type managed by the StaticMemoryManager should derive from hh::ManagedMemory.");
+  static_assert(std::is_constructible_v<T, Args...>, "The type managed by the StaticMemoryManager should be constructible with Args type(s).");
  private:
   std::tuple<Args...> args_ = {}; ///< Values to pass to the constructor
  public:
