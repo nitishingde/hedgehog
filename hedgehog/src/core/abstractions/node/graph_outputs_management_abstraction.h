@@ -164,7 +164,7 @@ class GraphOutputsManagementAbstraction :
     for (auto &sender : ((SenderAbstraction<Output>*)&rhs)->senders()) {
       if (auto senderAsClonable = dynamic_cast<abstraction::ClonableAbstraction *>(sender)) {
         if (auto senderAsNode = dynamic_cast<abstraction::NodeAbstraction *>(sender)) {
-          if (!correspondenceMap.contains(senderAsNode)) {
+          if (!correspondenceMap.count(senderAsNode)) {
             auto duplicate = senderAsClonable->clone(correspondenceMap);
             dynamic_cast<hh::core::abstraction::GraphNodeAbstraction *>(this)->registerNodeInsideGraph(duplicate.get());
             correspondenceMap.insert({senderAsNode, duplicate});

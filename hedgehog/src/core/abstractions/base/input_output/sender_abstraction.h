@@ -103,7 +103,7 @@ class SenderAbstraction {
   void duplicateEdgeSender(std::map<abstraction::NodeAbstraction *, std::shared_ptr<NodeAbstraction>> &mapping) {
     std::shared_ptr<NodeAbstraction> duplicateReceiver;
     auto senderAsNode = dynamic_cast<abstraction::NodeAbstraction *>(this);
-    if (!mapping.contains(senderAsNode)) {
+    if (!mapping.count(senderAsNode)) {
       throw std::runtime_error("A node that we are trying to connect is not mapped yet.");
     }
     auto mappedSender = std::dynamic_pointer_cast<SenderAbstraction < Output>>
@@ -118,7 +118,7 @@ class SenderAbstraction {
       for (auto &receiver : sender->connectedReceivers()) {
         for (auto &r : receiver->receivers()) {
           if (auto receiverAsNode = dynamic_cast<abstraction::NodeAbstraction *>(r)) {
-            if (mapping.contains(receiverAsNode)) {
+            if (mapping.count(receiverAsNode)) {
               auto mappedReceiver = std::dynamic_pointer_cast<ReceiverAbstraction<Output>>(mapping.at(receiverAsNode));
 
               if (mappedReceiver == nullptr) {

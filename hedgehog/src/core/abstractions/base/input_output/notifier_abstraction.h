@@ -99,7 +99,7 @@ class NotifierAbstraction {
       std::map<abstraction::NodeAbstraction *, std::shared_ptr<NodeAbstraction>> &mapping) {
     std::shared_ptr<NodeAbstraction> duplicateSlot;
     auto notifierAsNode = dynamic_cast<abstraction::NodeAbstraction *>(this);
-    if (!mapping.contains(notifierAsNode)) {
+    if (!mapping.count(notifierAsNode)) {
       throw std::runtime_error("A node that we are trying to connect is not mapped yet.");
     }
     auto mappedNotifier = std::dynamic_pointer_cast<abstraction::NotifierAbstraction>(mapping.at(notifierAsNode));
@@ -111,7 +111,7 @@ class NotifierAbstraction {
       for (auto &slot : notifier->connectedSlots()) {
         for (auto &s : slot->slots()) {
           if (auto slotAsNode = dynamic_cast<abstraction::NodeAbstraction *>(s)) {
-            if (mapping.contains(slotAsNode)) {
+            if (mapping.count(slotAsNode)) {
               auto mappedSlot = std::dynamic_pointer_cast<abstraction::SlotAbstraction>(mapping.at(slotAsNode));
               if (mappedSlot == nullptr) {
                 throw std::runtime_error("The mapped type of a node is not of the right type: SlotAbstraction.");
