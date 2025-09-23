@@ -221,7 +221,7 @@ class CoreStateManager
   /// - notify successors state manager terminated
   void run() override {
     using Outputs_t = tool::Outputs<Separator, AllTypes...>;
-    using Indices = std::make_index_sequence<std::tuple_size<Outputs_t>::value>;
+    using Indices = std::make_index_sequence<std::tuple_size_v<Outputs_t>>;
     Indices indices{};
     std::chrono::time_point<std::chrono::system_clock>
         start,

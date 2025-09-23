@@ -231,9 +231,9 @@ class Graph :
   template<class SenderNode_t, class ReceiverNode_t>
   void edges(std::shared_ptr<SenderNode_t> sender, std::shared_ptr<ReceiverNode_t> receiver) {
     static_assert(
-        std::tuple_size<
+        std::tuple_size_v<
             tool::Intersect_t<typename SenderNode_t::outputs_t, typename ReceiverNode_t::inputs_t>
-        >::value != 0, "The sender and the receiver nodes should at least share a type."
+        > != 0, "The sender and the receiver nodes should at least share a type."
     );
     auto senderNode = std::static_pointer_cast<Node>(sender);
     auto receiverNode = std::static_pointer_cast<Node>(receiver);

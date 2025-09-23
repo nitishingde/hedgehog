@@ -135,7 +135,7 @@ class CoreExecutionPipeline
     volatile bool isDone;
 
     using Inputs_t = typename EPIM<Separator, AllTypes...>::inputs_t;
-    using Indices = std::make_index_sequence<std::tuple_size<Inputs_t>::value>;
+    using Indices = std::make_index_sequence<std::tuple_size_v<Inputs_t>>;
 
     this->isActive(true);
 
