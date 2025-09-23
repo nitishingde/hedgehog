@@ -20,7 +20,7 @@
 #define HEDGEHOG_DOT_PRINTER_H
 
 #include <fstream>
-#include <filesystem>
+// #include <filesystem>
 #include <iostream>
 #include <cmath>
 #include <utility>
@@ -159,7 +159,7 @@ class DotPrinter : public Printer {
   /// @param verbose Enable verbose mode: report when dot files are created or overwritten to standard out, default
   /// false.
   /// @throw std::runtime_error if the dot printer is not constructed with a valid ColorPicker
-  DotPrinter(std::filesystem::path const &dotFilePath,
+  DotPrinter(std::string const &dotFilePath,
              ColorScheme colorScheme,
              StructureOptions structureOptions,
              InputOptions inputOptions,
@@ -669,30 +669,30 @@ class DotPrinter : public Printer {
   /// @param dotFilePath Path to test
   /// @param verbose Verbose option
   /// @throw std::runtime_error if the dotFilePath is not valid (do not represent a file and parent path does not exist)
-  void testPath(std::filesystem::path const &dotFilePath, bool verbose) {
-    auto directoryPath = dotFilePath.parent_path();
-    std::ostringstream oss;
-    if (!dotFilePath.has_filename()) {
-      oss << "The path: " << dotFilePath << " does not represent a file.";
-      throw (std::runtime_error(oss.str()));
-    }
-    if (!std::filesystem::exists(directoryPath)) {
-      oss << "The file " << dotFilePath.filename() << " can not be store in " << directoryPath
-          << " because the directory does not  exist.";
-      throw (std::runtime_error(oss.str()));
-    }
-    if (!std::filesystem::exists(directoryPath)) {
-      oss << "The file " << dotFilePath.filename() << " can not be store in " << directoryPath
-          << " because the directory does not  exist.";
-      throw (std::runtime_error(oss.str()));
-    }
-    if (verbose) {
-      if (std::filesystem::exists(dotFilePath)) {
-        std::cout << "The file " << dotFilePath.filename() << " will be overwritten." << std::endl;
-      } else {
-        std::cout << "The file " << dotFilePath.filename() << " will be created." << std::endl;
-      }
-    }
+  void testPath(std::string const &dotFilePath, [[maybe_unused]] bool verbose) {
+    // auto directoryPath = dotFilePath.parent_path();
+    // std::ostringstream oss;
+    // if (!dotFilePath.has_filename()) {
+    //   oss << "The path: " << dotFilePath << " does not represent a file.";
+    //   throw (std::runtime_error(oss.str()));
+    // }
+    // if (!std::filesystem::exists(directoryPath)) {
+    //   oss << "The file " << dotFilePath.filename() << " can not be store in " << directoryPath
+    //       << " because the directory does not  exist.";
+    //   throw (std::runtime_error(oss.str()));
+    // }
+    // if (!std::filesystem::exists(directoryPath)) {
+    //   oss << "The file " << dotFilePath.filename() << " can not be store in " << directoryPath
+    //       << " because the directory does not  exist.";
+    //   throw (std::runtime_error(oss.str()));
+    // }
+    // if (verbose) {
+    //   if (std::filesystem::exists(dotFilePath)) {
+    //     std::cout << "The file " << dotFilePath.filename() << " will be overwritten." << std::endl;
+    //   } else {
+    //     std::cout << "The file " << dotFilePath.filename() << " will be created." << std::endl;
+    //   }
+    // }
     outputFile_ = std::ofstream(dotFilePath);
   }
 

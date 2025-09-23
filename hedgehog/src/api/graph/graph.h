@@ -20,7 +20,7 @@
 #define HEDGEHOG_GRAPH_H
 
 #include <ostream>
-#include <filesystem>
+// #include <filesystem>
 
 #include "../../behavior/node.h"
 #include "../../behavior/copyable.h"
@@ -320,7 +320,7 @@ class Graph :
   /// @param colorPicker Color scheme used to generate the dotfile, JetColor by default.
   /// @param verbose Enable verbose mode: report when dot files are created or overwritten to standard out, default
   /// false.
-  void createDotFile(std::filesystem::path const &dotFilePath,
+  void createDotFile(std::string const &dotFilePath,
                      ColorScheme colorScheme = ColorScheme::NONE,
                      StructureOptions structureOptions = StructureOptions::NONE,
                      InputOptions inputOption = InputOptions::GATHERED,
@@ -330,7 +330,7 @@ class Graph :
     core::abstraction::GraphNodeAbstraction *core = this->coreGraph_.get();
     DotPrinter
         printer(
-        std::filesystem::absolute(dotFilePath), colorScheme, structureOptions, inputOption, debugOption, core,
+        dotFilePath, colorScheme, structureOptions, inputOption, debugOption, core,
         std::move(colorPicker), verbose);
     core->visit(&printer);
   }
