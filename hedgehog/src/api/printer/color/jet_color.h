@@ -67,9 +67,9 @@ class JetColor : public ColorPicker {
     }
 
     oss << "\"#"
-        << std::setfill('0') << std::setw(2) << std::hex << (uint16_t) clamp(dR * 255, 0., 255.)
-        << std::setfill('0') << std::setw(2) << std::hex << (uint16_t) clamp(dG * 255, 0., 255.)
-        << std::setfill('0') << std::setw(2) << std::hex << (uint16_t) clamp(dB * 255, 0., 255.)
+        << std::setfill('0') << std::setw(2) << std::hex << (uint16_t) std::clamp(dR * 255, 0., 255.)
+        << std::setfill('0') << std::setw(2) << std::hex << (uint16_t) std::clamp(dG * 255, 0., 255.)
+        << std::setfill('0') << std::setw(2) << std::hex << (uint16_t) std::clamp(dB * 255, 0., 255.)
         << "\"";
 
     return oss.str();

@@ -49,7 +49,7 @@ class BlueToRedColor : public ColorPicker {
                               std::chrono::nanoseconds const &range) override {
 
     auto posRedToBlue = (uint64_t) std::round((double) (value.count() - min.count()) / (double) range.count() * 255);
-    posRedToBlue = clamp(posRedToBlue, (uint64_t) 0, (uint64_t) 255);
+    posRedToBlue = std::clamp(posRedToBlue, (uint64_t) 0, (uint64_t) 255);
     std::stringstream ss;
     ss << "\"#"
        << std::setfill('0') << std::setw(2) << std::hex << posRedToBlue

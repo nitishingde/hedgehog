@@ -43,14 +43,6 @@ class ColorPicker {
       std::chrono::nanoseconds const &value,
       std::chrono::nanoseconds const &min, std::chrono::nanoseconds const &range) = 0;
 };
-
-template<typename T>
-static const T& clamp(const T &v, const T &lo, const T &hi) {
-  if(v < lo) return lo;
-  if(v > hi) return hi;
-  return v;
-}
-
 }
 
 #endif //HEDGEHOG_COLOR_PICKER_H
