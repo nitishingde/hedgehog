@@ -19,7 +19,7 @@
 #ifndef HEDGEHOG_DEFAULT_SENDER_H
 #define HEDGEHOG_DEFAULT_SENDER_H
 
-#include <execution>
+// #include <execution>
 #include "../../../tools/intrinsics.h"
 #include "../implementor/implementor_sender.h"
 #include "../implementor/implementor_receiver.h"
