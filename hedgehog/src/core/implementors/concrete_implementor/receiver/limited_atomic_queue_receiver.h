@@ -42,7 +42,7 @@
 #ifndef HEDGEHOG_LIMITED_ATOMIC_QUEUE_RECEIVER_H
 #define HEDGEHOG_LIMITED_ATOMIC_QUEUE_RECEIVER_H
 
-#include <execution>
+// #include <execution>
 // #include "../../tools/intrinsics.h"
 
 #include "../../implementor/implementor_receiver.h"
