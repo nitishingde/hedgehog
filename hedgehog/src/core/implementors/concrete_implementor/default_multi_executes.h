@@ -40,7 +40,7 @@ class DefaultMultiExecutes : public DefaultExecute<Inputs>... {
   /// @tparam MultiExecute Type of the user-defined node
   /// @param multiExecutesNode user-defined node capable of doing computation (inheriting from behavior::Execute for
   /// all Inputs types)
-  template <class MultiExecute> requires (std::is_base_of_v<behavior::Execute<Inputs>, MultiExecute> && ...)
+  template <class MultiExecute>
   explicit DefaultMultiExecutes(MultiExecute *const multiExecutesNode) : DefaultExecute<Inputs>(multiExecutesNode)... {}
 
   /// @brief Default destructor

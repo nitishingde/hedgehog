@@ -50,8 +50,7 @@ class ExecutionPipelineInputsManagementAbstraction :
   /// MultiSwitchRules
   /// @tparam ExecutionPipelineImplementation Type of data deriving from MultiSwitchRules
   /// @param executionPipeline Implementation of the execution pipeline
-  template<class ExecutionPipelineImplementation> requires std::is_base_of_v<behavior::MultiSwitchRules<Inputs...>,
-                                                                             ExecutionPipelineImplementation>
+  template<class ExecutionPipelineImplementation>
   explicit ExecutionPipelineInputsManagementAbstraction(ExecutionPipelineImplementation *const executionPipeline)
       : SlotAbstraction(std::make_shared<implementor::DefaultSlot>()),
         ReceiverAbstraction<Inputs>(std::make_shared<implementor::QueueReceiver<Inputs>>())...,
