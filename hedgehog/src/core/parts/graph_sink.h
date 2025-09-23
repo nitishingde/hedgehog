@@ -19,7 +19,7 @@
 #ifndef HEDGEHOG_GRAPH_SINK_H
 #define HEDGEHOG_GRAPH_SINK_H
 
-#include <variant>
+// #include <variant>
 #include "../abstractions/base/input_output/slot_abstraction.h"
 #include "../abstractions/base/node/node_abstraction.h"
 #include "../abstractions/base/input_output/receiver_abstraction.h"
@@ -40,7 +40,7 @@ class GraphSink :
     public abstraction::SlotAbstraction,
     public abstraction::ReceiverAbstraction<Outputs> ... {
  public:
-  using ResultType_t = std::shared_ptr<std::variant<std::shared_ptr<Outputs>...>>; ///< Accessor to the output types
+  // using ResultType_t = std::shared_ptr<std::variant<std::shared_ptr<Outputs>...>>; ///< Accessor to the output types
 
   /// @brief Default constructor
   GraphSink() :
@@ -54,15 +54,15 @@ class GraphSink :
 
   /// @brief Get a result from the sink, if none is available wait for it (block the current thread)
   /// @return A variant of shared pointers containing an output data
-  ResultType_t getBlockingResult() {
-    ResultType_t res = nullptr;
-    if (!sleep()) {
-      res = std::make_shared<std::variant<std::shared_ptr<Outputs>...>>();
-      bool outputFound = false;
-      (getOneAvailableResultForAType<Outputs>(outputFound, res), ...);
-    }
-    return res;
-  }
+  // ResultType_t getBlockingResult() {
+  //   ResultType_t res = nullptr;
+  //   if (!sleep()) {
+  //     res = std::make_shared<std::variant<std::shared_ptr<Outputs>...>>();
+  //     bool outputFound = false;
+  //     (getOneAvailableResultForAType<Outputs>(outputFound, res), ...);
+  //   }
+  //   return res;
+  // }
 
   /// @brief Gather sink information
   /// @param printer Printer visitor gathering information on nodes
@@ -94,14 +94,14 @@ class GraphSink :
   /// @tparam Output Type of the output data
   /// @param outputFound Flag to avoid getting multiple output data in one run
   /// @param res Output data
-  template<class Output>
-  void getOneAvailableResultForAType(bool &outputFound, ResultType_t &res) {
-    if (!outputFound) {
-      std::shared_ptr<Output> data = nullptr;
-      outputFound = abstraction::ReceiverAbstraction<Output>::getInputData(data);
-      if (outputFound) { *res = data; }
-    }
-  }
+  // template<class Output>
+  // void getOneAvailableResultForAType(bool &outputFound, ResultType_t &res) {
+  //   if (!outputFound) {
+  //     std::shared_ptr<Output> data = nullptr;
+  //     outputFound = abstraction::ReceiverAbstraction<Output>::getInputData(data);
+  //     if (outputFound) { *res = data; }
+  //   }
+  // }
 
   /// @brief Test if the receivers for all types are empty
   /// @return True if the receivers for all types are empty, else false
