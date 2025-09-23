@@ -497,7 +497,7 @@ class CoreGraph :
 
   /// @brief Test if the graph has been registered
   /// @param funcName Function name calling the registration test
-  void testRegistered(auto const &funcName) {
+  void testRegistered(const std::string &funcName) {
     if (this->isRegistered()) {
       std::ostringstream oss;
       oss << "You can not modify a graph that is connected inside another graph: " << funcName;
