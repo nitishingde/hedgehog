@@ -41,7 +41,7 @@ class StateMultiSenders : public MultiSenders<Outputs...>, public StateSender<Ou
   /// @brief Add result to the ready list
   /// @tparam DataType Type of the data, should be part of the state Output types
   /// @param data Data of type DataType added to the ready list
-  template<tool::MatchOutputTypeConcept<Outputs...> DataType>
+  template<class DataType>
   void addResult(std::shared_ptr<DataType> data) { StateSender<DataType>::readyList()->push(data); }
 
 };

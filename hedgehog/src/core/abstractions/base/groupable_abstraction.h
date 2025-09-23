@@ -34,7 +34,7 @@ namespace abstraction {
 /// @brief Typed abstraction for groupable node
 /// @tparam CopyableNode Type of the node to copy and group
 /// @tparam CopyableCore Type of the core to copy and group
-template<tool::CopyableNode CopyableNode, class CopyableCore>
+template<class CopyableNode, class CopyableCore>
 class GroupableAbstraction :
     public CopyableAbstraction<CopyableNode>,
     public AnyGroupableAbstraction {

@@ -87,8 +87,8 @@ class TaskInputsManagementAbstraction :
   /// @param concreteMultiExecutes Concrete multi executes implementation
   template<
       class NodeType,
-      hh::tool::ConcreteMultiReceiverImplementation<Inputs...> ConcreteMultiReceivers,
-      hh::tool::ConcreteMultiExecuteImplementation<Inputs...> ConcreteMultiExecutes
+      class ConcreteMultiReceivers,
+      class ConcreteMultiExecutes
   >
   explicit TaskInputsManagementAbstraction(
       NodeType *const nodeTask,
@@ -145,7 +145,7 @@ class TaskInputsManagementAbstraction :
  private:
   /// @brief Access the ReceiverAbstraction of the type InputDataType to process an element
   /// @tparam InputDataType Type of input data
-  template<tool::ContainsConcept<Inputs...> InputDataType>
+  template<class InputDataType>
   void operateReceiver() {
     auto typedReceiver = static_cast<ReceiverAbstraction<InputDataType> *>(this);
     std::chrono::time_point<std::chrono::system_clock>
@@ -163,8 +163,9 @@ class TaskInputsManagementAbstraction :
 
   /// @brief Call execute function with nullptr
   /// @tparam InputDataType input data type
-  template<tool::ContainsConcept<Inputs...> InputDataType>
+  template<class InputDataType>
   void callExecuteForATypeWithNullptr() {
+    // static_assert(tool::ContainsConcept<Inputs...>);
     std::chrono::time_point<std::chrono::system_clock>
         start = std::chrono::system_clock::now(),
         finish;

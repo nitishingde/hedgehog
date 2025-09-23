@@ -40,7 +40,7 @@ class TaskMultiSenders : public MultiSenders<Outputs...> {
   /// @tparam MultiSendersAndNotifier Type of core that has to implement TaskOutputsManagementAbstraction
   /// @param abstraction Core's abstraction of type MultiSendersAndNotifier
   /// @throw std::runtime_error The abstraction is not valid (== nullptr)
-  template<tool::MultiSendersAndNotifierAbstractionConcept MultiSendersAndNotifier>
+  template<class MultiSendersAndNotifier>
   explicit TaskMultiSenders(std::shared_ptr<MultiSendersAndNotifier> abstraction){
     if (abstraction == nullptr) {
       throw std::runtime_error("A sender needs to have the abstraction initialized before used.");
@@ -57,7 +57,7 @@ class TaskMultiSenders : public MultiSenders<Outputs...> {
   /// @tparam DataType Type of the data, should be part of the task Output types
   /// @param data Data of type DataType sent to the task successors
   /// @throw std::runtime_error The TaskOutputsManagementAbstraction abstraction is not initialized (== nullptr)
-  template<tool::MatchOutputTypeConcept<Outputs...> DataType>
+  template<class DataType>
   void addResult(std::shared_ptr<DataType> data) {
     if (tom_ == nullptr) {
       throw std::runtime_error("A sender needs to have the abstraction initialized before used.");
