@@ -44,7 +44,6 @@ class CoreSwitch : public abstraction::NodeAbstraction,
   /// @tparam Switch Type of the user-defined abstraction with switch rules
   /// @param multiSwitchRules User-defined abstraction with switch rules
   template<class Switch>
-  requires std::is_base_of_v<behavior::MultiSwitchRules<Inputs...>, Switch>
   explicit CoreSwitch(Switch *const multiSwitchRules)
   : abstraction::NodeAbstraction("Switch"),
   multiSwitchRules_(static_cast<behavior::MultiSwitchRules<Inputs...> *const>(multiSwitchRules)) {}
