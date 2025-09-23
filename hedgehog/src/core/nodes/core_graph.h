@@ -570,7 +570,7 @@ class CoreGraph :
 
     for (auto &originalNode : originalInsideNodes) {
       if (auto originalAsClonable = dynamic_cast<abstraction::ClonableAbstraction *>(originalNode.first)) {
-        if (!correspondenceMap.contains(originalNode.first)) {
+        if (!correspondenceMap.count(originalNode.first)) {
           nodeClone = originalAsClonable->clone(correspondenceMap);
           storeClone(nodeClone);
           this->registerNodeInsideGraph(nodeClone.get());

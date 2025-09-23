@@ -87,10 +87,10 @@ class HedgehogExportFile : public Printer {
       for (auto const &edge : edges_) {
         auto const &[src, dest] = edge.first;
 
-        if(mapExecutionPipelineAlias_.contains(src)){ infoSrc = mapExecutionPipelineAlias_.at(src);}
+        if(mapExecutionPipelineAlias_.count(src)){ infoSrc = mapExecutionPipelineAlias_.at(src);}
         else { infoSrc = {src->name(), src->graphId()}; }
 
-        if(mapExecutionPipelineAlias_.contains(dest)){ infoDest = mapExecutionPipelineAlias_.at(dest);}
+        if(mapExecutionPipelineAlias_.count(dest)){ infoDest = mapExecutionPipelineAlias_.at(dest);}
         else { infoDest = {dest->name(), dest->graphId()}; }
 
         buffer_ << "{\n";
@@ -180,7 +180,7 @@ class HedgehogExportFile : public Printer {
                  [[maybe_unused]]size_t const &queueSize,
                  [[maybe_unused]]size_t const &maxQueueSize) override {
     std::pair<core::abstraction::NodeAbstraction const *, core::abstraction::NodeAbstraction const *> key{from, to};
-    if (!edges_.contains(key)) { edges_.insert({key, {}}); }
+    if (!edges_.count(key)) { edges_.insert({key, {}}); }
     edges_[key].push_back(edgeType);
   }
 
