@@ -124,7 +124,7 @@ class CoreGraph :
   void setInputForAllCommonTypes(InputCore *const core) {
     testRegistered(__FUNCTION__);
     using Input_t = tool::Intersect_t<CoreInputTypes, typename GIM<Separator, AllTypes...>::inputs_t>;
-    using Indices = std::make_index_sequence<std::tuple_size_v<Input_t>>;
+    using Indices = std::make_index_sequence<std::tuple_size<Input_t>::value>;
     registerNodeInsideGraph(core);
     if (dynamic_cast<abstraction::SlotAbstraction *>(core) == nullptr) {
       std::ostringstream oss;
@@ -149,7 +149,7 @@ class CoreGraph :
   void setInputForACommonType(InputCore *const core) {
     testRegistered(__FUNCTION__);
     using input_t = tool::Intersect_t<CoreInputTypes, typename GIM<Separator, AllTypes...>::inputs_t>;
-    using Indices = std::make_index_sequence<std::tuple_size_v<input_t>>;
+    using Indices = std::make_index_sequence<std::tuple_size<input_t>::value>;
     testAbstractReceivers<input_t>(core, Indices{});
     registerNodeInsideGraph(core);
     this->template addInputNodeToGraph<InputType>(core);
@@ -165,7 +165,7 @@ class CoreGraph :
   void setOutputForAllCommonTypes(OutputCore *const core) {
     testRegistered(__FUNCTION__);
     using CommonTypes = tool::Intersect_t<CoreOutputTypes, typename GOM<Separator, AllTypes...>::outputs_t>;
-    using Indices = std::make_index_sequence<std::tuple_size_v<CommonTypes>>;
+    using Indices = std::make_index_sequence<std::tuple_size<CommonTypes>::value>;
     Indices indices{};
     testAbstractSenders<CoreOutputTypes>(core, indices);
     registerNodeInsideGraph(core);
@@ -184,7 +184,7 @@ class CoreGraph :
     testRegistered(__FUNCTION__);
 
     using OutputType_t = std::tuple<OutputType>;
-    using IndicesCommonTypes = std::make_index_sequence<std::tuple_size_v<OutputType_t>>;
+    using IndicesCommonTypes = std::make_index_sequence<std::tuple_size<OutputType_t>::value>;
     IndicesCommonTypes indices{};
     testAbstractSenders<OutputType_t>(core, indices);
 
@@ -203,11 +203,11 @@ class CoreGraph :
 
     using CommonTypes = tool::Intersect_t<OutputTypesSenderTuple, InputTypeReceiverTuple>;
 
-    using IndicesCommonTypes = std::make_index_sequence<std::tuple_size_v<CommonTypes>>;
+    using IndicesCommonTypes = std::make_index_sequence<std::tuple_size<CommonTypes>::value>;
     IndicesCommonTypes indices{};
 
     static_assert(
-        std::tuple_size_v<CommonTypes> != 0,
+        std::tuple_size<CommonTypes>::value != 0,
         "When adding an edge between two nodes, they should share at least one type."
     );
 
@@ -233,12 +233,12 @@ class CoreGraph :
   void addEdgeForACommonType(NodeAbstraction *const senderCore, NodeAbstraction *const receiverCore) {
     testRegistered(__FUNCTION__);
     using CommonType_t = std::tuple<CommonType>;
-    using Indices = std::make_index_sequence<std::tuple_size_v<CommonType_t>>;
+    using Indices = std::make_index_sequence<std::tuple_size<CommonType_t>::value>;
     Indices indices{};
 
     using CommonTypes = tool::Intersect_t<OutputTypesSenderTuple, InputTypeReceiverTuple>;
     static_assert(
-        std::tuple_size_v<CommonTypes> != 0,
+        std::tuple_size<CommonTypes>::value != 0,
         "When adding an edge between two nodes, they should share at least one type.");
     static_assert(
         tool::isContainedInTuple_v<CommonType, CommonTypes>,

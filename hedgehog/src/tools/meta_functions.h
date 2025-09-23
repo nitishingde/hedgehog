@@ -194,7 +194,7 @@ struct IntersectImpl {
 template<typename T1, typename T2>
 struct Intersect {
   /// @brief Accessor to the type of the tuple of types that are in T1 and T2
-  using type = typename IntersectImpl<T1, T2, 0, std::tuple_size_v<T1>>::type;
+  using type = typename IntersectImpl<T1, T2, 0, std::tuple_size<T1>::value>::type;
 };
 }
 
@@ -210,17 +210,32 @@ using Outputs = typename internals::Splitter<delta, Types...>::Outputs;
 template<class Tuple1, class Tuple2>
 using Intersect_t = typename internals::Intersect<Tuple1, Tuple2>::type;
 
+namespace _internals {//TODO: remove and replace with std::disjunction_v
+  // Base case: no arguments, so it's false
+  template<typename...>
+  struct disjunction: std::false_type {};
+
+  // Recursive step: if the first type is true, the whole expression is true.
+  // Otherwise, it recurses on the rest of the types.
+  template<typename T, typename... Ts>
+  struct disjunction<T, Ts...>: std::conditional_t<T::value, std::true_type, disjunction<Ts...>> {};
+
+  // The same logic can be done with a variable template (C++14)
+  template<typename... Ts>
+  inline constexpr bool disjunction_v = disjunction<Ts...>::value;
+}
+
 /// @brief Helper testing if a type T is in variadic Ts
 /// @tparam T Type to test
 /// @tparam Ts Variadic of types
 template<class T, class ...Ts>
-constexpr bool isContainedIn_v = std::disjunction_v<std::is_same<T, Ts>...>;
+constexpr bool isContainedIn_v = _internals::disjunction_v<std::is_same<T, Ts>...>;
 
 /// @brief Helper testing if a type is in a tuple of types
 /// @tparam T Type to test
 /// @tparam Tuple Tuple of types
 template<class T, class Tuple>
-constexpr bool isContainedInTuple_v = std::tuple_size_v<Intersect_t<std::tuple<T>, Tuple>> == 1;
+constexpr bool isContainedInTuple_v = std::tuple_size<Intersect_t<std::tuple<T>, Tuple>>::value == 1;
 
 /// @brief Lambda container type for the lambda task
 /// @tparam LambdaTaskType Type of the lambda task (CRTP)
