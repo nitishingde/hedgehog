@@ -73,7 +73,7 @@ class ExecutionPipelineInputsManagementAbstraction :
   /// @param data Data of type Input
   /// @param graphId Graph id
   /// @return True if the data needs to be sent to the graph of id graphId
-  template<tool::ContainsConcept<Inputs...> Input>
+  template<class Input>
   bool callSendToGraph(std::shared_ptr<Input> &data, size_t const &graphId) {
     return this->coreSwitch_->callSendToGraph(data, graphId);
   }

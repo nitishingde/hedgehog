@@ -32,7 +32,7 @@ namespace abstraction {
 
 /// @brief Core abstraction for copyable nodes
 /// @tparam CopyableNode Type of node to be copied
-template<tool::CopyableNode CopyableNode>
+template<class CopyableNode>
 class CopyableAbstraction {
  private:
   CopyableNode *const copyableNode_ = nullptr; ///< Pointer to copyable node abstraction

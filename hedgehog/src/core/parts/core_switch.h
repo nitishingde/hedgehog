@@ -57,7 +57,7 @@ class CoreSwitch : public abstraction::NodeAbstraction,
   /// @param data Input data
   /// @param graphId Graph id
   /// @return True if the data needs to be send to graph of id graphId, else false
-  template<tool::ContainsConcept<Inputs...> Input>
+  template<class Input>
   bool callSendToGraph(std::shared_ptr<Input> &data, size_t const &graphId) {
     return static_cast<behavior::SwitchRule<Input> *>(multiSwitchRules_)->sendToGraph(data, graphId);
   }

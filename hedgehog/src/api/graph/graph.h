@@ -169,7 +169,7 @@ class Graph :
   /// @brief Check if the input node is a valid object, and then connect it to the graph for all common types.
   /// @tparam InputNode_t Type of the input node
   /// @param inputNode Input node to connect
-  template<tool::CompatibleInputNode<typename core::GIM<Separator, AllTypes...>::inputs_t> InputNode_t>
+  template<class InputNode_t>
   void inputs(std::shared_ptr<InputNode_t> inputNode) {
     auto node = std::static_pointer_cast<Node>(inputNode);
     // Store shared_ptr in case user dereference it while it is still needed
@@ -184,8 +184,7 @@ class Graph :
   /// @param inputNode Input node to connect
   template<
       class InputDataType,
-      tool::CompatibleInputNodeForAType<InputDataType,
-                                        typename core::GIM<Separator, AllTypes...>::inputs_t> InputNode_t>
+      class InputNode_t>
   void input(std::shared_ptr<InputNode_t> inputNode) {
     auto node = std::static_pointer_cast<Node>(inputNode);
     // Store shared_ptr in case user dereference it while it is still needed
@@ -198,7 +197,7 @@ class Graph :
   /// @brief Check if the output node is a valid object, and then connect it to the graph output for all common types.
   /// @tparam OutputNode_t Type of the output node
   /// @param outputNode Output node to connect
-  template<tool::CompatibleOutputNode<typename core::GOM<Separator, AllTypes...>::outputs_t> OutputNode_t>
+  template<class OutputNode_t>
   void outputs(std::shared_ptr<OutputNode_t> outputNode) {
     auto node = std::static_pointer_cast<Node>(outputNode);
     // Store shared_ptr in case user dereference it while it is still needed
@@ -213,8 +212,7 @@ class Graph :
   /// @tparam OutputNode_t Type of the output node
   /// @param outputNode Output node to connect
   template<class OutputType,
-      tool::CompatibleOutputNodeForAType<OutputType,
-                                         typename core::GOM<Separator, AllTypes...>::outputs_t> OutputNode_t>
+      class OutputNode_t>
   void output(std::shared_ptr<OutputNode_t> outputNode) {
     auto node = std::static_pointer_cast<Node>(outputNode);
     // Store shared_ptr in case user dereference it while it is still needed
@@ -230,7 +228,7 @@ class Graph :
   /// @tparam ReceiverNode_t Type of the receiver node
   /// @param sender Sender node
   /// @param receiver Receiver node
-  template<tool::SenderNode SenderNode_t, tool::ReceiverNode ReceiverNode_t>
+  template<class SenderNode_t, class ReceiverNode_t>
   void edges(std::shared_ptr<SenderNode_t> sender, std::shared_ptr<ReceiverNode_t> receiver) {
     static_assert(
         std::tuple_size_v<
@@ -255,7 +253,7 @@ class Graph :
   /// @param sender Sender node
   /// @param receiver Receiver node
   template<class CommonType,
-      tool::SenderNodeForAType<CommonType> SenderNode_t, tool::ReceiverNodeForAType<CommonType> ReceiverNode_t>
+      class SenderNode_t, class ReceiverNode_t>
   void edge(std::shared_ptr<SenderNode_t> sender, std::shared_ptr<ReceiverNode_t> receiver) {
     auto senderNode = std::static_pointer_cast<Node>(sender);
     auto receiverNode = std::static_pointer_cast<Node>(receiver);
@@ -283,7 +281,7 @@ class Graph :
   /// @details Each input data is sent to all input nodes that match the input type that is sent.
   /// @tparam CompatibleInputType_t Type on the input data
   /// @param data Data sent to the graph
-  template<tool::MatchInputTypeConcept<tool::Inputs<Separator, AllTypes...>> CompatibleInputType_t>
+  template<class CompatibleInputType_t>
   void pushData(std::shared_ptr<CompatibleInputType_t> data) { this->coreGraph_->broadcastAndNotifyAllInputNodes(data); }
 
   /// Wait for the graph to terminate

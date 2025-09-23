@@ -120,7 +120,7 @@ class InternalLambdaTask
   /// @brief Set a lambda function for an input type
   /// @tparam Input Input type
   /// @param lambda Lambda function
-  template<hh::tool::ContainsInTupleConcept<tool::Inputs<Separator, AllTypes...>> Input>
+  template<class Input>
   void setLambda(std::function<void(std::shared_ptr<Input>, tool::TaskInterface<SubType>)> lambda) {
       std::get<std::function<void(std::shared_ptr<Input>, tool::TaskInterface<SubType>)>>(lambdas_) = lambda;
       LambdaMultiExecute<SubType, tool::Inputs<Separator, AllTypes...>>::reinitialize(lambdas_, self_);

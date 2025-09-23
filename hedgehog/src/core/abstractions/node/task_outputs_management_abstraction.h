@@ -53,7 +53,7 @@ class TaskOutputsManagementAbstraction : public NotifierAbstraction, public Send
   /// @tparam ConcreteMultiSenders Type of the concrete implementation of the senders abstraction
   /// @param concreteNotifier Concrete implementation of the notifier abstraction
   /// @param concreteMultiSenders Concrete implementation of the senders abstraction
-  template<hh::tool::ConcreteMultiSenderImplementation<Outputs...> ConcreteMultiSenders>
+  template<class ConcreteMultiSenders>
   TaskOutputsManagementAbstraction(
       std::shared_ptr<implementor::ImplementorNotifier> concreteNotifier,
       std::shared_ptr<ConcreteMultiSenders> concreteMultiSenders)
@@ -66,7 +66,7 @@ class TaskOutputsManagementAbstraction : public NotifierAbstraction, public Send
   /// @brief Send a piece of data and notify the successors
   /// @tparam OutputDataType Type of data
   /// @param data Data to send
-  template<tool::ContainsConcept<Outputs...> OutputDataType>
+  template<class OutputDataType>
   void sendAndNotify(std::shared_ptr<OutputDataType> data) {
     static_cast<SenderAbstraction<OutputDataType> *>(this)->send(data);
     static_cast<NotifierAbstraction *>(this)->notify();

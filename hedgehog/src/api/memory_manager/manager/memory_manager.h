@@ -31,7 +31,7 @@ namespace hh {
 /// Base memory manager
 /// @brief Memory manager with default created managed object
 /// @tparam T Type managed by the memory manager
-template<tool::ManageableMemory T>
+template<class T>
 class MemoryManager : public AbstractMemoryManager {
  public:
   /// Create a memory manager with a certain capacity

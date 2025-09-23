@@ -119,7 +119,7 @@ class CoreGraph :
   /// @throw std::runtime if the core is malformed (missing inheritance to SlotAbstraction)
   template<
       class CoreInputTypes,
-      tool::CompatibleInputCore<CoreInputTypes, typename GIM<Separator, AllTypes...>::inputs_t> InputCore
+      class InputCore
   >
   void setInputForAllCommonTypes(InputCore *const core) {
     testRegistered(__FUNCTION__);
@@ -145,10 +145,7 @@ class CoreGraph :
   template<
       class InputType,
       class CoreInputTypes,
-      tool::CompatibleInputCoreForAType<
-          InputType,
-          CoreInputTypes,
-          typename GIM<Separator, AllTypes...>::inputs_t> InputCore>
+      class InputCore>
   void setInputForACommonType(InputCore *const core) {
     testRegistered(__FUNCTION__);
     using input_t = tool::Intersect_t<CoreInputTypes, typename GIM<Separator, AllTypes...>::inputs_t>;
@@ -164,7 +161,7 @@ class CoreGraph :
   /// @param core Core to set as output
   template<
       class CoreOutputTypes,
-      tool::CompatibleOutputCore<CoreOutputTypes, typename GOM<Separator, AllTypes...>::outputs_t> OutputCore>
+      class OutputCore>
   void setOutputForAllCommonTypes(OutputCore *const core) {
     testRegistered(__FUNCTION__);
     using CommonTypes = tool::Intersect_t<CoreOutputTypes, typename GOM<Separator, AllTypes...>::outputs_t>;
@@ -182,9 +179,7 @@ class CoreGraph :
   /// @param core Core to set as output
   template<class OutputType,
       class CoreOutputTypes,
-      tool::CompatibleOutputCoreForAType<
-          OutputType, CoreOutputTypes, typename GOM<Separator, AllTypes...
-          >::outputs_t> OutputCore>
+      class OutputCore>
   void setOutputForACommonType(OutputCore *const core) {
     testRegistered(__FUNCTION__);
 
@@ -291,7 +286,7 @@ class CoreGraph :
   /// @brief Broadcast an input data to all inputs nodes
   /// @tparam CompatibleInputType_t Type of the input data
   /// @param data Data to broadcast
-  template<tool::MatchInputTypeConcept<tool::Inputs<Separator, AllTypes...>> CompatibleInputType_t>
+  template<class CompatibleInputType_t>
   void broadcastAndNotifyAllInputNodes(std::shared_ptr<CompatibleInputType_t> &data) {
 
     testRegistered(__FUNCTION__);
