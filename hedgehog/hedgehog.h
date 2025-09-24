@@ -19,7 +19,7 @@
 #ifndef HEDGEHOG_HEDGEHOG_H
 #define HEDGEHOG_HEDGEHOG_H
 
-#include <version>
+#include "version.h"
 
 #ifdef HH_ENABLE_HH_CX
 #if !__cpp_lib_constexpr_string || !__cpp_lib_constexpr_vector
